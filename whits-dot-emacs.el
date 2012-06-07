@@ -9,64 +9,49 @@
 (load-file "/usr/local/share/emacs/site-lisp/dvc/dvc-load.el")
 (load-file "/opt/local/share/doc/git-core/contrib/emacs/git.el")
 
-;; mako
-;;(load "/Users/whit/.emacs.d/mmm-mako.el")
-;;(add-to-list 'auto-mode-alist '("\\.mako\\'" . html-mode))
-;;(mmm-add-mode-ext-class 'html-mode "\\.mako\\'" 'mako)
+(load "django-mode.el")
+(load "gist.el")
+(load "graphviz-dot-mode.el")
+(load "json.el")
+(load "tail.el")
 
+;; yasnippet
+;;(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
+
+(require 'package)
+
+(require 'css-mode)
+(require 'flymake)
+(require 'json)
+(require 'less-css-mode)
 (require 'magit)
 (require 'magit-svn)
+(require 'php-mode)
+(require 'psvn)
+(require 'rst)
+(require 'sgml-mode)
+(require 'tail)
+(require 'uniquify)
+(require 'yaml-mode)
+;;(require 'yasnippet) ;; not yasnippet-bundle
+;;(require 'dirtrack)
+(require 'doctest-mode)
+;;(require 'jinja)
+
+(package-initialize)
 
 ;; set default mode
-(require 'rst)
 (setq major-mode 'rst-mode)
 (setq initial-major-mode 'rst-mode)
 (add-hook 'text-mode-hook 'rst-text-mode-bindings)
 (add-hook 'rst-adjust-hook 'rst-toc-update)
 (setq rst-mode-lazy nil)
 
-;; yasnippet
-(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
-(require 'yasnippet) ;; not yasnippet-bundle
-(yas/initialize)
-(yas/load-directory "~/.emacs.d/plugins/yasnippet/snippets")
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(case-fold-search t)
- '(current-language-environment "English")
- '(dired-listing-switches "-alh")
- '(dired-recursive-copies (quote always))
- '(dired-recursive-deletes (quote top))
- '(dirtrack-list ("^.*:\\([^$]*\\)\\$" 1))
- '(dvc-tips-enabled nil)
- '(exec-path (quote ("/opt/local/bin" "/sw/bin" "/sw/sbin" "/usr/bin" "/bin" "/usr/sbin" "/sbin" "/usr/X11R6/bin" "/sw/lib/emacs/22.0.50-carbon/i386-apple-darwin8" "/usr/local/bin" "/Users/whit/dev/elisp/bin/")))
- '(global-font-lock-mode t nil (font-lock))
- '(grep-command "grep -nri -e ")
- '(grep-find-command "find . -not -path \"*svn*\" -not -path \"*pyc\" -type f -print0 | xargs -0 grep -in -e ")
- '(initial-scratch-message ";; scratch ;;
 
-")
- '(js2-basic-offset 4)
- '(list-directory-verbose-switches "-lh")
- '(magit-git-executable "/usr/local/bin/git")
- '(remote-shell-program "/usr/bin/ssh")
- '(rst-level-face-base-light 15)
- '(safe-local-variable-values (quote ((todo-categories "Wedding" "NYC" "TestLayers" "Training" "Wicked" "Todo" "Todo" "Today" "Todo"))))
- '(shell-input-autoexpand (quote input))
- '(tool-bar-mode nil)
- '(transient-mark-mode t))
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(default ((t (:stipple nil :background "gray5" :foreground "pale goldenrod" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal))))
- '(flymake-errline ((((class color)) (:background "DarkRed")))))
-;;'(default ((t (:stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal)))))
+;;(yas/initialize)
+;;(yas/load-directory "~/.emacs.d/plugins/yasnippet/snippets")
 
 ;; diary mode
 (setq view-diary-entries-initially t
@@ -76,17 +61,13 @@
  (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
 
 ;;(load "jinja.el")
-(load "django-mode.el")
-(load "gist.el")
-(load "graphviz-dot-mode.el")
-(load "json.el")
+
 
 (setq-default transient-mark-mode t)
 (set-cursor-color "light blue") 
 (which-func-mode)
 (setq load-path  (cons (expand-file-name "~/.emacs.d/") load-path))
 (load "tramp")
-
 
 ;;pymacs
 (autoload 'pymacs-load "pymacs" nil t)
@@ -96,74 +77,39 @@
 (eval-after-load "pymacs"
   '(add-to-list 'pymacs-load-path "/Users/whit/dev/elisp/lib/python2.6/site-packages"))
 
-;; autocomplete
-
-;; (require 'auto-complete)
-;; (global-auto-complete-mode t)
-
-;; (when (require 'auto-complete nil t)
-;;   ;;(require 'auto-complete-yasnippet)
-;;   (require 'auto-complete-python)
-;;   (require 'auto-complete-css) 
-;;   (require 'auto-complete-cpp)  
-;;   (require 'auto-complete-emacs-lisp)  
-;;   ;(require 'auto-complete-semantic)  
-;;   ;(require 'auto-complete-gtags)
-
-;;   (global-auto-complete-mode t)
-;;   (setq ac-auto-start 3)
-;;   (setq ac-dwim t)
-;;   (set-default 'ac-sources '(ac-source-yasnippet ac-source-abbrev ac-source-words-in-buffer ac-source-files-in-current-dir ac-source-symbols)))
-  ;(set-default 'ac-sources '(ac-source-abbrev ac-source-words-in-buffer ac-source-files-in-current-dir ac-source-symbols)))
-
-;; Tag Support
-;; (defun djcb-gtags-create-or-update ()
-;;   "create or update the gnu global tag file"
-;;   (interactive)
-;;   (if (not (= 0 (call-process "global" nil nil nil " -p"))) ; tagfile doesn't exist?
-;;     (let ((olddir default-directory)
-;;           (topdir (read-directory-name  
-;;                     "gtags: top of source tree:" default-directory)))
-;;       (cd topdir)
-;;       (shell-command "gtags && echo 'created tagfile'")
-;;       (cd olddir)) ; restore   
-;;     ;;  tagfile already exists; update it
-;;     (shell-command "global -u && echo 'updated tagfile'")))
-
-;; (add-hook 'gtags-mode-hook 
-;;   (lambda()
-;;     (local-set-key (kbd "M-.") 'gtags-find-tag)   ; find a tag, also M-.
-;;     (local-set-key (kbd "M-,") 'gtags-find-rtag)))  ; reverse tag
-
-;; (add-hook 'python-mode-hook
-;;   (lambda ()
-;;     ;;(require 'gtags)
-;;     ;;(gtags-mode t)
-;;     (djcb-gtags-create-or-update)))
-
-
 ;; javascript mode
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
-;; chuck mode
-;; (setq auto-mode-alist
-;;    (append '(("\.ck$" . chuck-mode))
-;;            auto-mode-alist))
-;; (autoload 'chuck-mode "chuck" "Chuck-mode" t)
+;; Ruby
+(add-to-list 'auto-mode-alist '("\\Vagrantfile\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.rb\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist '("\\.irbrc\\'" . ruby-mode))
 
-;;;;; PYTHON ;;;;;;
-
-(add-to-list 'auto-mode-alist '("\\.pxd\\'" . pyrex-mode))
-(add-to-list 'auto-mode-alist '("\\.rst\\'" . rst-mode))
-(add-to-list 'auto-mode-alist '("\\.pxi\\'" . pyrex-mode))
-(add-to-list 'auto-mode-alist '("\\.pjs\\'" . python-mode))
-(add-to-list 'auto-mode-alist '("\\.jtmpl\\'" . html-mode)) ;; jinja
-(add-to-list 'auto-mode-alist '("\\.egg\\'" . archive-mode)) ;; open egg
+;; zip and tar derivatives
 (add-to-list 'auto-mode-alist '("\\.bz\\'" . archive-mode)) 
 (add-to-list 'auto-mode-alist '("\\.jar\\'" . archive-mode)) 
 (add-to-list 'auto-mode-alist '("\\.war\\'" . archive-mode)) 
+(add-to-list 'auto-mode-alist '("\\.deb\\'" . archive-mode)) 
 (add-to-list 'auto-mode-alist '("\\.pybundle\\'" . archive-mode)) 
+
+;; other extensions
+(setq auto-mode-alist (cons '("\\.md$" . markdown-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.css$" . css-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.php$" . php-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.zcml$" . sgml-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.pt$" . html-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.yml$" . html-mode) auto-mode-alist))
+;;(setq auto-mode-alist (cons '("\\.jst$" . django-mode) auto-mode-alist))
+
+;;;;; PYTHON ;;;;;;
+(add-to-list 'auto-mode-alist '("\\.pxd\\'" . pyrex-mode))
+(add-to-list 'auto-mode-alist '("\\.rst\\'" . rst-mode))
+(add-to-list 'auto-mode-alist '("\\.pxi\\'" . pyrex-mode))
+(add-to-list 'auto-mode-alist '("\\.pyx\\'" . pyrex-mode))
+(add-to-list 'auto-mode-alist '("\\.pjs\\'" . python-mode))
+(add-to-list 'auto-mode-alist '("\\.jtmpl\\'" . html-mode)) ;; jinja
+(add-to-list 'auto-mode-alist '("\\.egg\\'" . archive-mode)) ;; open egg
 
 (setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
 (setq interpreter-mode-alist (cons '("python" . python-mode)
@@ -182,6 +128,7 @@
 (fset 'review
       "#@@ DWM: ")
 
+(add-hook 'python-mode-hook '(lambda () (require 'virtualenv)))
 (add-hook 'python-mode-hook 
 		  '(lambda ()
 		     (local-set-key  [(meta ?p) (meta ?p)] 'break)
@@ -199,27 +146,10 @@
 
 (setq tramp-default-method "ssh")
 
-(require 'psvn)
-(require 'sgml-mode)
-;;(require 'doctest-mode)
-(require 'css-mode)
-(require 'json)
-(require 'php-mode)
-;;(require 'jinja)
-
-(setq auto-mode-alist (cons '("\\.jtmpl$" . css-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.css$" . css-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.php$" . php-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.css.dtml$" . css-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.zcml$" . sgml-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.pt$" . html-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.jst$" . django-mode) auto-mode-alist))
-
 (global-font-lock-mode t)
 (global-set-key [f4] 'shell)
 (global-set-key [f5] 'rename-buffer)
-(global-set-key [f6] 'svn-status)
-(global-set-key [f7] 'dvc-status)
+(global-set-key [f6] 'magit-status)
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\M-s" 'grep-find)
 
@@ -255,31 +185,44 @@
 	     (make-local-variable 'write-contents-hooks)
 	     (add-hook 'write-contents-hooks 'untabify-buffer)))
 
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'post-forward)
 
+(setq uniquify-buffer-name-style 'post-forward)
 (put 'scroll-left 'disabled nil)
 
-;;(load-file "/Users/whit/.emacs.d/flymake.el")
-(require 'flymake)
-(when (load "flymake" t) 
-  (defun flymake-pyflakes-init () 
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy 
-                       'flymake-create-temp-inplace)) 
-           (local-file (file-relative-name 
-                        temp-file 
-                        (file-name-directory buffer-file-name)))) 
-      (list "pyflakes" (list local-file)))) 
-  
-  (add-to-list 'flymake-allowed-file-name-masks 
-               '("\\.py\\'" flymake-pyflakes-init))) 
+;; Run pyflakes with flymake.
+(when (load "flymake" t)
+  (defun flymake-pyflakes-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list "pyflakes" (list local-file))))
+
+  (add-to-list 'flymake-allowed-file-name-masks
+               '("\\.py\\'" flymake-pyflakes-init)))
 
 (add-hook 'find-file-hook 'flymake-find-file-hook)
 
-;;(require 'dirtrack)
+;; Work around bug in flymake that causes Emacs to hang when you open a
+;; docstring.
+(delete '(" *\\(\\[javac\\]\\)? *\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)" 2 4 nil 5)
+        flymake-err-line-patterns)
+
+;; And the same for the emacs-snapshot in Hardy ... spot the difference.
+(delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
+        flymake-err-line-patterns)
+
+(delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
+        flymake-err-line-patterns)
 
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+
+(add-hook 'ruby-mode-hook 'flymake-ruby-load)
+
+;; avoid hangs launching warning box
+(setq flymake-gui-warnings-enabled nil)
 
 ;; shortcut for directory resync
 (add-hook 'shell-mode-hook 
@@ -301,3 +244,75 @@
 
 ;; (eval-after-load "slime"
 ;;    '(slime-setup '(slime-fancy slime-banner)))
+
+(defun sort-imports ()
+  (interactive)
+  (save-excursion
+    (let ((open-paren (save-excursion (progn (up-list -1) (point))))
+          (close-paren (save-excursion (progn (up-list 1) (point))))
+          (string-lessp-case-insensitive
+           (lambda (a b) (string-lessp (downcase a) (downcase b))))
+          sorted-imports)
+      (goto-char (1+ open-paren))
+      (skip-chars-forward " \n\t")
+      (setq sorted-imports
+            (sort
+             (delete-dups
+              (split-string (buffer-substring
+                             (point)
+                             (save-excursion (goto-char (1- close-paren))
+                                             (skip-chars-backward " \n\t")
+                                             (point)))
+                            ", *\\(\n *\\)?"))
+             string-lessp-case-insensitive))
+      (delete-region open-paren close-paren)
+      (goto-char open-paren)
+      (insert "(\n")
+      (insert (mapconcat
+               (lambda (import) (concat "    " import ",\n"))
+               (remove "" sorted-imports) ""))
+      (insert "    )")
+      )))
+
+
+(custom-set-variables
+  ;; custom-set-variables was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(case-fold-search t)
+ '(current-language-environment "English")
+ '(dired-listing-switches "-alh")
+ '(dired-recursive-copies (quote always))
+ '(dired-recursive-deletes (quote top))
+ '(dirtrack-list ("^.*:\\([^$]*\\)\\$" 1))
+ '(dvc-tips-enabled nil)
+ '(exec-path (quote ("/opt/local/bin" "/sw/bin" "/sw/sbin" "/usr/bin" "/bin" "/usr/sbin" "/sbin" "/usr/X11R6/bin" "/sw/lib/emacs/22.0.50-carbon/i386-apple-darwin8" "/usr/local/bin" "/Users/whit/dev/elisp/bin/")))
+ '(global-font-lock-mode t nil (font-lock))
+ '(grep-command "grep -nri -e ")
+ '(grep-find-command "find . -not -path \"*svn*\" -not -path \"*pyc\" -type f -print0 | xargs -0 grep -in -e ")
+ '(inhibit-startup-screen t)
+ '(initial-buffer-choice "~/dev")
+ '(initial-scratch-message ";; scratch ;;
+
+")
+ '(js2-basic-offset 4)
+ '(less-css-compile-at-save t)
+ '(less-css-lessc-command "/Applications/Less.app/Contents/Resources/engines/bin/lessc")
+ '(list-directory-verbose-switches "-lh")
+ '(magit-git-executable "/usr/local/bin/git")
+ '(remote-shell-program "/usr/bin/ssh")
+ '(rst-level-face-base-light 15)
+ '(safe-local-variable-values (quote ((todo-categories "Wedding" "NYC" "TestLayers" "Training" "Wicked" "Todo" "Todo" "Today" "Todo"))))
+ '(shell-input-autoexpand (quote input))
+ '(tool-bar-mode nil)
+ '(transient-mark-mode t)
+ '(virtualenv-root "~/dev"))
+(custom-set-faces
+  ;; custom-set-faces was added by Custom.
+  ;; If you edit it by hand, you could mess it up, so be careful.
+  ;; Your init file should contain only one such instance.
+  ;; If there is more than one, they won't work right.
+ '(default ((t (:stipple nil :background "gray5" :foreground "pale goldenrod" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal))))
+ '(flymake-errline ((((class color)) (:background "DarkRed")))))
+;;'(default ((t (:stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal)))))
