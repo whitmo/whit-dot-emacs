@@ -1,13 +1,11 @@
 (setq mac-command-modifier 'meta) ;; aquamacs only
 
 (add-to-list 'load-path "/Users/whit/.emacs.d/")
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/")
+
+(add-to-list 'load-path "/Users/whit/share/emacs/site-lisp")
 
 (setenv "PYMACS_PYTHON" "/Users/whit/dev/elisp/bin/python")
 (setenv "VIRTUAL_ENV" "/Users/whit/dev/elisp")
-
-(load-file "/usr/local/share/emacs/site-lisp/dvc/dvc-load.el")
-(load-file "/opt/local/share/doc/git-core/contrib/emacs/git.el")
 
 (load "django-mode.el")
 (load "gist.el")
