@@ -1,42 +1,32 @@
 (setq mac-command-modifier 'meta) ;; aquamacs only
 
-(add-to-list 'load-path "/Users/whit/.emacs.d/")
 
+(add-to-list 'load-path "/Users/whit/.emacs.d/")
 (add-to-list 'load-path "/Users/whit/share/emacs/site-lisp")
+
+(require 'package)
+(package-initialize)
 
 (setenv "PYMACS_PYTHON" "/Users/whit/dev/elisp/bin/python")
 (setenv "VIRTUAL_ENV" "/Users/whit/dev/elisp")
 
-(load "django-mode.el")
-(load "gist.el")
 (load "graphviz-dot-mode.el")
-(load "json.el")
 (load "tail.el")
 
 ;; yasnippet
 ;;(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
 
-(require 'package)
-
 (require 'css-mode)
 (require 'flymake)
 (require 'json)
-(require 'less-css-mode)
 (require 'magit)
 (require 'magit-svn)
-(require 'php-mode)
-(require 'psvn)
 (require 'rst)
 (require 'sgml-mode)
 (require 'tail)
 (require 'uniquify)
 (require 'yaml-mode)
-;;(require 'yasnippet) ;; not yasnippet-bundle
-;;(require 'dirtrack)
-(require 'doctest-mode)
-;;(require 'jinja)
 
-(package-initialize)
 
 ;; set default mode
 (setq major-mode 'rst-mode)
@@ -58,12 +48,10 @@
  (add-hook 'diary-display-hook 'fancy-diary-display)
  (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
 
-;;(load "jinja.el")
-
 
 (setq-default transient-mark-mode t)
 (set-cursor-color "light blue") 
-(which-func-mode)
+(which-function-mode)
 (setq load-path  (cons (expand-file-name "~/.emacs.d/") load-path))
 (load "tramp")
 
@@ -94,7 +82,6 @@
 ;; other extensions
 (setq auto-mode-alist (cons '("\\.md$" . markdown-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.css$" . css-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.php$" . php-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.zcml$" . sgml-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.pt$" . html-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.yml$" . html-mode) auto-mode-alist))
@@ -188,31 +175,32 @@
 (put 'scroll-left 'disabled nil)
 
 ;; Run pyflakes with flymake.
-(when (load "flymake" t)
-  (defun flymake-pyflakes-init ()
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-           (local-file (file-relative-name
-                        temp-file
-                        (file-name-directory buffer-file-name))))
-      (list "pyflakes" (list local-file))))
+;; (when (load "flymake" t)
+;;   (defun flymake-pyflakes-init ()
+;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                        'flymake-create-temp-inplace))
+;;            (local-file (file-relative-name
+;;                         temp-file
+;;                         (file-name-directory buffer-file-name))))
+;;       (list "pyflakes" (list local-file))))
 
-  (add-to-list 'flymake-allowed-file-name-masks
-               '("\\.py\\'" flymake-pyflakes-init)))
+;;   (add-to-list 'flymake-allowed-file-name-masks
+;;                '("\\.py\\'" flymake-pyflakes-init)))
 
-(add-hook 'find-file-hook 'flymake-find-file-hook)
+;; (add-hook 'find-file-hook 'flymake-find-file-hook)
 
-;; Work around bug in flymake that causes Emacs to hang when you open a
-;; docstring.
-(delete '(" *\\(\\[javac\\]\\)? *\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)" 2 4 nil 5)
-        flymake-err-line-patterns)
 
-;; And the same for the emacs-snapshot in Hardy ... spot the difference.
-(delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
-        flymake-err-line-patterns)
+;; ;; Work around bug in flymake that causes Emacs to hang when you open a
+;; ;; docstring.
+;; (delete '(" *\\(\\[javac\\]\\)? *\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)" 2 4 nil 5)
+;;         flymake-err-line-patterns)
 
-(delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
-        flymake-err-line-patterns)
+;; ;; And the same for the emacs-snapshot in Hardy ... spot the difference.
+;; (delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
+;;         flymake-err-line-patterns)
+
+;; (delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
+;;         flymake-err-line-patterns)
 
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
