@@ -92,10 +92,11 @@
 (setq auto-mode-alist (cons '("\\.sls$" . yaml-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.yaml$" . yaml-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.yml$" . yaml-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.yml$" . yaml-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.css$" . css-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.zcml$" . sgml-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.pt$" . html-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.yml$" . html-mode) auto-mode-alist))
+
 ;;(setq auto-mode-alist (cons '("\\.jst$" . django-mode) auto-mode-alist))
 
 ;;;;; PYTHON ;;;;;;
