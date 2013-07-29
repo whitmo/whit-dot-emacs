@@ -1,17 +1,17 @@
 (setq mac-command-modifier 'meta) ;; aquamacs only
-
-
-(add-to-list 'load-path "/Users/whit/.emacs.d/")
-(add-to-list 'load-path "/Users/whit/share/emacs/site-lisp")
+(setq load-path  (cons (expand-file-name "~/.emacs.d/local") load-path))
 
 (require 'package)
 (package-initialize)
+
+;;(add-to-list 'load-path "/Users/whit/.emacs.d/")
+(add-to-list 'load-path "/usr/local/share/git-core/contrib/emacs/")
 
 (setenv "PYMACS_PYTHON" "/Users/whit/dev/elisp/bin/python")
 (setenv "VIRTUAL_ENV" "/Users/whit/dev/elisp")
 
 (load "graphviz-dot-mode.el")
-(load "tail.el")
+;;(load "tail.el")
 
 ;; yasnippet
 ;;(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
@@ -19,14 +19,21 @@
 (require 'css-mode)
 (require 'flymake)
 (require 'json)
-(require 'magit)
-(require 'magit-svn)
 (require 'rst)
 (require 'sgml-mode)
-(require 'tail)
+;;(require 'tail)
 (require 'uniquify)
 (require 'yaml-mode)
+(require 'shell-switcher)
+(require 'ipython)
 
+;; auto-complete
+(require 'auto-complete)
+(global-auto-complete-mode t)
+(setq ac-auto-start nil)
+(global-set-key "\M-/" 'ac-start)
+(setq ac-auto-start 2)
+(define-key ac-complete-mode-map "\M-/" 'ac-stop)
 
 ;; set default mode
 (setq major-mode 'rst-mode)
@@ -38,7 +45,7 @@
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 
-;;(yas/initialize)
+;;(yas/initialize)-
 ;;(yas/load-directory "~/.emacs.d/plugins/yasnippet/snippets")
 
 ;; diary mode
@@ -64,6 +71,7 @@
   '(add-to-list 'pymacs-load-path "/Users/whit/dev/elisp/lib/python2.6/site-packages"))
 
 ;; javascript mode
+(require 'js2-mode)
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
 
@@ -81,6 +89,9 @@
 
 ;; other extensions
 (setq auto-mode-alist (cons '("\\.md$" . markdown-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.sls$" . yaml-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.yaml$" . yaml-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.yml$" . yaml-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.css$" . css-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.zcml$" . sgml-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.pt$" . html-mode) auto-mode-alist))
@@ -140,8 +151,8 @@
 
 (setq frame-background-mode 'dark)
 
-(setq auto-mode-alist
-      (cons '("\\.txt$" . doctest-mode) auto-mode-alist))
+;;(setq auto-mode-alist
+;;     (cons '("\\.txt$" . nil) auto-mode-alist))
 
 ;; Presentation font sizing
 ;; courier 24 font and 80x35 window dimension
@@ -174,33 +185,33 @@
 (setq uniquify-buffer-name-style 'post-forward)
 (put 'scroll-left 'disabled nil)
 
-;; Run pyflakes with flymake.
-;; (when (load "flymake" t)
-;;   (defun flymake-pyflakes-init ()
-;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;;                        'flymake-create-temp-inplace))
-;;            (local-file (file-relative-name
-;;                         temp-file
-;;                         (file-name-directory buffer-file-name))))
-;;       (list "pyflakes" (list local-file))))
+;;Run pyflakes with flymake.
+(when (load "flymake" t)
+  (defun flymake-pyflakes-init ()
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       'flymake-create-temp-inplace))
+           (local-file (file-relative-name
+                        temp-file
+                        (file-name-directory buffer-file-name))))
+      (list "pyflakes" (list local-file))))
 
-;;   (add-to-list 'flymake-allowed-file-name-masks
-;;                '("\\.py\\'" flymake-pyflakes-init)))
+  (add-to-list 'flymake-allowed-file-name-masks
+               '("\\.py\\'" flymake-pyflakes-init)))
 
-;; (add-hook 'find-file-hook 'flymake-find-file-hook)
+(add-hook 'find-file-hook 'flymake-find-file-hook)
 
 
-;; ;; Work around bug in flymake that causes Emacs to hang when you open a
-;; ;; docstring.
-;; (delete '(" *\\(\\[javac\\]\\)? *\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)" 2 4 nil 5)
-;;         flymake-err-line-patterns)
+;; Work around bug in flymake that causes Emacs to hang when you open a
+;; docstring.
+(delete '(" *\\(\\[javac\\]\\)? *\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)" 2 4 nil 5)
+        flymake-err-line-patterns)
 
-;; ;; And the same for the emacs-snapshot in Hardy ... spot the difference.
-;; (delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
-;;         flymake-err-line-patterns)
+;; And the same for the emacs-snapshot in Hardy ... spot the difference.
+(delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
+        flymake-err-line-patterns)
 
-;; (delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
-;;         flymake-err-line-patterns)
+(delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
+        flymake-err-line-patterns)
 
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
@@ -260,12 +271,27 @@
       (insert "    )")
       )))
 
+;; ipython
+;; (setq
+;;  python-shell-interpreter "ipython"
+;;  python-shell-interpreter-args ""
+;;  python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+;;  python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+;;  python-shell-completion-setup-code
+;;    "from IPython.core.completerlib import module_completion"
+;;  python-shell-completion-module-string-code
+;;    "';'.join(module_completion('''%s'''))\n"
+;;  python-shell-completion-string-code
+;;    "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+
+
+
 
 (custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(case-fold-search t)
  '(current-language-environment "English")
  '(dired-listing-switches "-alh")
@@ -273,7 +299,7 @@
  '(dired-recursive-deletes (quote top))
  '(dirtrack-list ("^.*:\\([^$]*\\)\\$" 1))
  '(dvc-tips-enabled nil)
- '(exec-path (quote ("/opt/local/bin" "/sw/bin" "/sw/sbin" "/usr/bin" "/bin" "/usr/sbin" "/sbin" "/usr/X11R6/bin" "/sw/lib/emacs/22.0.50-carbon/i386-apple-darwin8" "/usr/local/bin" "/Users/whit/dev/elisp/bin/")))
+ '(exec-path (quote ("/usr/bin" "/bin" "/usr/sbin" "/sbin" "/usr/local/bin" "/Users/whit/dev/elisp/bin/")))
  '(global-font-lock-mode t nil (font-lock))
  '(grep-command "grep -nri -e ")
  '(grep-find-command "find . -not -path \"*svn*\" -not -path \"*pyc\" -type f -print0 | xargs -0 grep -in -e ")
@@ -287,18 +313,24 @@
  '(less-css-lessc-command "/Applications/Less.app/Contents/Resources/engines/bin/lessc")
  '(list-directory-verbose-switches "-lh")
  '(magit-git-executable "/usr/local/bin/git")
+ '(python-pep8-command "~/bin/pep8")
  '(remote-shell-program "/usr/bin/ssh")
  '(rst-level-face-base-light 15)
- '(safe-local-variable-values (quote ((todo-categories "Wedding" "NYC" "TestLayers" "Training" "Wicked" "Todo" "Todo" "Today" "Todo"))))
+ '(safe-local-variable-values (quote ((todo-categories "HOME") (todo-categories "WAT"))))
  '(shell-input-autoexpand (quote input))
+ '(shell-switcher-mode t)
+ '(shell-switcher-new-shell-function (quote shell-switcher-make-shell))
  '(tool-bar-mode nil)
  '(transient-mark-mode t)
  '(virtualenv-root "~/dev"))
 (custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
  '(default ((t (:stipple nil :background "gray5" :foreground "pale goldenrod" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal))))
  '(flymake-errline ((((class color)) (:background "DarkRed")))))
 ;;'(default ((t (:stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal)))))
+
+
+
