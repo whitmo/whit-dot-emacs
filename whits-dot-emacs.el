@@ -15,17 +15,21 @@
 
 ;; yasnippet
 ;;(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
-
+(require 'io-mode)
+(require 'io-mode-inf)
 (require 'css-mode)
 (require 'flymake)
 (require 'json)
 (require 'rst)
 (require 'sgml-mode)
-;;(require 'tail)
 (require 'uniquify)
 (require 'yaml-mode)
 (require 'shell-switcher)
-(require 'ipython)
+(require 'time)
+(require 'time-date)
+;;(require 'ipython)
+
+;; "date \"+%Y-%m-%d %H:%M:%S\""
 
 ;; auto-complete
 (require 'auto-complete)
@@ -35,24 +39,31 @@
 (setq ac-auto-start 2)
 (define-key ac-complete-mode-map "\M-/" 'ac-stop)
 
+;; org mode
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cb" 'org-iswitchb)
+(global-set-key "\M-`" 'other-frame)
+(transient-mark-mode t)
+
+
 ;; set default mode
-(setq major-mode 'rst-mode)
-(setq initial-major-mode 'rst-mode)
+(setq major-mode 'org-mode)
+
+;; rst
 (add-hook 'text-mode-hook 'rst-text-mode-bindings)
 (add-hook 'rst-adjust-hook 'rst-toc-update)
 (setq rst-mode-lazy nil)
 
+;; packages
 (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 
 ;;(yas/initialize)-
 ;;(yas/load-directory "~/.emacs.d/plugins/yasnippet/snippets")
 
-;; diary mode
-(setq view-diary-entries-initially t
-       mark-diary-entries-in-calendar t
-       number-of-diary-entries 7)
- (add-hook 'diary-display-hook 'fancy-diary-display)
+
  (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
 
 
@@ -74,6 +85,15 @@
 (require 'js2-mode)
 (autoload 'js2-mode "js2" nil t)
 (add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
+
+(defun beautify-json ()
+  (interactive)
+  (let ((b (if mark-active (min (point) (mark)) (point-min)))
+        (e (if mark-active (max (point) (mark)) (point-max))))
+    (shell-command-on-region b e
+     "python -c 'import sys,json; data=json.loads(sys.stdin.read()); print json.dumps(data,sort_keys=True,indent=4).decode(\"unicode_escape\").encode(\"utf8\",\"replace\")'" (current-buffer) t)))
+
+(define-key json-mode-map (kbd "C-c C-f") 'beautify-json)
 
 ;; Ruby
 (add-to-list 'auto-mode-alist '("\\Vagrantfile\\'" . ruby-mode))
@@ -98,6 +118,8 @@
 (setq auto-mode-alist (cons '("\\.pt$" . html-mode) auto-mode-alist))
 
 ;;(setq auto-mode-alist (cons '("\\.jst$" . django-mode) auto-mode-alist))
+
+(add-to-list 'auto-mode-alist '("\\.erl\\'" . erlang-mode))
 
 ;;;;; PYTHON ;;;;;;
 (add-to-list 'auto-mode-alist '("\\.pxd\\'" . pyrex-mode))
@@ -155,12 +177,7 @@
 ;;(setq auto-mode-alist
 ;;     (cons '("\\.txt$" . nil) auto-mode-alist))
 
-;; Presentation font sizing
-;; courier 24 font and 80x35 window dimension
-;;(setq default-frame-alist '((width . 79)
-;;(height . 25)
-;;(font . "*-courier-*-150-*")
-;;(setq initial-frame-alist default-frame-alist)))
+
 
 ;; from http://www.jwz.org/doc/tabs-vs-spaces.html
 (defun untabify-buffer ()
@@ -300,15 +317,12 @@
  '(dired-recursive-deletes (quote top))
  '(dirtrack-list ("^.*:\\([^$]*\\)\\$" 1))
  '(dvc-tips-enabled nil)
- '(exec-path (quote ("/usr/bin" "/bin" "/usr/sbin" "/sbin" "/usr/local/bin" "/Users/whit/dev/elisp/bin/")))
+ '(exec-path (quote ("/usr/local/opt/coreutils/libexec/gnubin" "/usr/bin" "/bin" "/usr/sbin" "/sbin" "/usr/local/bin" "/Users/whit/dev/elisp/bin/")))
  '(global-font-lock-mode t nil (font-lock))
  '(grep-command "grep -nri -e ")
  '(grep-find-command "find . -not -path \"*svn*\" -not -path \"*pyc\" -type f -print0 | xargs -0 grep -in -e ")
+ '(haskell-mode-hook (quote (turn-on-haskell-indent turn-on-haskell-indentation)))
  '(inhibit-startup-screen t)
- '(initial-buffer-choice "~/dev")
- '(initial-scratch-message ";; scratch ;;
-
-")
  '(js2-basic-offset 4)
  '(less-css-compile-at-save t)
  '(less-css-lessc-command "/Applications/Less.app/Contents/Resources/engines/bin/lessc")
