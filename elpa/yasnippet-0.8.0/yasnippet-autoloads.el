@@ -4,7 +4,7 @@
 
 
 ;;;### (autoloads (yas-global-mode yas-minor-mode) "yasnippet" "yasnippet.el"
-;;;;;;  (20856 6903 0 0))
+;;;;;;  (21342 63004 335912 888000))
 ;;; Generated autoloads from yasnippet.el
 
 (autoload 'yas-minor-mode "yasnippet" "\
@@ -48,7 +48,7 @@ See `yas-minor-mode' for more information on Yas minor mode.
 ;;;***
 
 ;;;### (autoloads nil nil ("dropdown-list.el" "yasnippet-pkg.el")
-;;;;;;  (20856 6922 231777 0))
+;;;;;;  (21342 63008 337388 825000))
 
 ;;;***
 

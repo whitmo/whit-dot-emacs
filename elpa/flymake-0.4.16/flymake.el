@@ -1066,7 +1066,8 @@ Convert it to flymake internal format."
      (" *\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)"
       1 3 4 5)
      ;; ant/javac, also matches gcc prior to 4.5
-     ;;(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)" 2 4 nil 5))
+     (" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)"
+      2 4 nil 5))
    ;; compilation-error-regexp-alist)
    (flymake-reformat-err-line-patterns-from-compile-el compilation-error-regexp-alist-alist))
   "Patterns for matching error/warning lines.  Each pattern has the form

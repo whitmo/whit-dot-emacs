@@ -1,21 +1,22 @@
-(setq mac-command-modifier 'meta) ;; aquamacs only
+;;(setq mac-command-modifier 'meta) ;; aquamacs only
 (setq load-path  (cons (expand-file-name "~/.emacs.d/local") load-path))
 
 (require 'package)
 (package-initialize)
 
-;;(add-to-list 'load-path "/Users/whit/.emacs.d/")
-(add-to-list 'load-path "/usr/local/share/git-core/contrib/emacs/")
+(add-to-list 'load-path "/Users/whit/.emacs.d/")
+;;(add-to-list 'load-path "/usr/local/share/git-core/contrib/emacs/")
 
 (setenv "PYMACS_PYTHON" "/Users/whit/dev/elisp/bin/python")
 (setenv "VIRTUAL_ENV" "/Users/whit/dev/elisp")
 
-(load "graphviz-dot-mode.el")
+;;(load "graphviz-dot-mode.el")
 ;;(load "tail.el")
 
 ;; yasnippet
 ;;(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
 (require 'io-mode)
+(require 'python-mode)
 (require 'io-mode-inf)
 (require 'css-mode)
 (require 'flymake)
@@ -65,11 +66,11 @@
 ;;(yas/load-directory "~/.emacs.d/plugins/yasnippet/snippets")
 
 
- (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
+(add-hook 'today-visible-calendar-hook 'calendar-mark-today)
 
 
 (setq-default transient-mark-mode t)
-(set-cursor-color "light blue") 
+(set-cursor-color "light blue")
 (which-function-mode)
 (setq load-path  (cons (expand-file-name "~/.emacs.d/") load-path))
 (load "tramp")
@@ -95,11 +96,11 @@
 (add-to-list 'auto-mode-alist '("\\.irbrc\\'" . ruby-mode))
 
 ;; zip and tar derivatives
-(add-to-list 'auto-mode-alist '("\\.bz\\'" . archive-mode)) 
-(add-to-list 'auto-mode-alist '("\\.jar\\'" . archive-mode)) 
-(add-to-list 'auto-mode-alist '("\\.war\\'" . archive-mode)) 
-(add-to-list 'auto-mode-alist '("\\.deb\\'" . archive-mode)) 
-(add-to-list 'auto-mode-alist '("\\.pybundle\\'" . archive-mode)) 
+(add-to-list 'auto-mode-alist '("\\.bz\\'" . archive-mode))
+(add-to-list 'auto-mode-alist '("\\.jar\\'" . archive-mode))
+(add-to-list 'auto-mode-alist '("\\.war\\'" . archive-mode))
+(add-to-list 'auto-mode-alist '("\\.deb\\'" . archive-mode))
+(add-to-list 'auto-mode-alist '("\\.pybundle\\'" . archive-mode))
 
 ;; other extensions
 (setq auto-mode-alist (cons '("\\.md$" . markdown-mode) auto-mode-alist))
@@ -132,7 +133,7 @@
 (autoload 'pyrex-mode "pyrex-mode" "Pyrex editing mode." t)
 (autoload 'doctest-mode "doctest-mode" "doctest editing mode." t)
 
-(fset 'break 
+(fset 'break
       "import pdb;pdb.set_trace()\C-a\C-i")
 
 (fset 'postmortem
@@ -141,8 +142,9 @@
 (fset 'review
       "#@@ DWM: ")
 
+(add-hook 'python-mode-hook 'flycheck-mode)
 (add-hook 'python-mode-hook '(lambda () (require 'virtualenv)))
-(add-hook 'python-mode-hook 
+(add-hook 'python-mode-hook
 		  '(lambda ()
 		     (local-set-key  [(meta ?p) (meta ?p)] 'break)
 		     (local-set-key  [(meta ?p) (meta ?m)] 'postmortem)
@@ -152,9 +154,9 @@
 (defvar gud-pdb-marker-regexp "^> \\([-a-zA-Z0-9_/.:\\ ()]*\\|<string>\\)(\\([0-9]+\\))\\([a-zA-Z0-9_]*\\|\\?\\)()\\(->[^\n]*\\)?\n")
 
 ;; (defadvice pdb (before gud-query-cmdline activate)
-;;     \"Provide a better default command line when called interactively.\"    
-;;     (interactive     
-;;      (list (gud-query-cmdline '/usr/lib/python2.3/pdb.py                             
+;;     \"Provide a better default command line when called interactively.\"
+;;     (interactive
+;;      (list (gud-query-cmdline '/usr/lib/python2.3/pdb.py
 ;; 			      (file-name-nondirectory buffer-file-name)))))
 
 (setq tramp-default-method "ssh")
@@ -188,7 +190,7 @@
 (setq-default indent-tabs-mode nil)
 
 ; add more hooks hereno
-(add-hook 'c-mode-hook 
+(add-hook 'c-mode-hook
 	  '(lambda ()
 	     (make-local-variable 'write-contents-hooks)
 	     (add-hook 'write-contents-hooks 'untabify-buffer)))
@@ -218,13 +220,11 @@
 (delete '(" *\\(\\[javac\\]\\)? *\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)" 2 4 nil 5)
         flymake-err-line-patterns)
 
-;; And the same for the emacs-snapshot in Hardy ... spot the difference.
-(delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
-        flymake-err-line-patterns)
 
 (delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
         flymake-err-line-patterns)
 
+(add-hook 'python-mode-hook 'whitespace-mode)
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
@@ -234,9 +234,9 @@
 (setq flymake-gui-warnings-enabled nil)
 
 ;; shortcut for directory resync
-(add-hook 'shell-mode-hook 
+(add-hook 'shell-mode-hook
   (lambda()
-    (local-set-key (kbd "M-]") 'shell-resync-dirs)))  
+    (local-set-key (kbd "M-]") 'shell-resync-dirs)))
 
 ;; slime
 ;; (add-to-list 'load-path "/opt/local/share/emacs/site-lisp/slime")
@@ -248,7 +248,7 @@
 ;; (add-hook 'lisp-mode-hook
 ;;            (lambda ()
 ;;              (cond ((not (featurep 'slime))
-;;                     (require 'slime) 
+;;                     (require 'slime)
 ;;                     (normal-mode)))))
 
 ;; (eval-after-load "slime"
@@ -296,8 +296,7 @@
 ;;  python-shell-completion-string-code
 ;;    "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
-
-
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -311,18 +310,16 @@
  '(dired-recursive-deletes (quote top))
  '(dirtrack-list ("^.*:\\([^$]*\\)\\$" 1))
  '(dvc-tips-enabled nil)
- '(exec-path (quote ("/usr/local/opt/coreutils/libexec/gnubin" "/usr/bin" "/bin" "/usr/sbin" "/sbin" "/usr/local/bin" "/Users/whit/dev/elisp/bin/")))
+ '(exec-path (quote ("/usr/bin" "/bin" "/usr/sbin" "/sbin" "/usr/local/bin" "/Users/whit/dev/elisp/bin/")))
+ '(flycheck-highlighting-mode (quote sexps))
  '(global-font-lock-mode t nil (font-lock))
  '(grep-command "grep -nri -e ")
  '(grep-find-command "find . -not -path \"*svn*\" -not -path \"*pyc\" -type f -print0 | xargs -0 grep -in -e ")
  '(haskell-mode-hook (quote (turn-on-haskell-indent turn-on-haskell-indentation)))
  '(inhibit-startup-screen t)
  '(js2-basic-offset 4)
- '(less-css-compile-at-save t)
- '(less-css-lessc-command "/Applications/Less.app/Contents/Resources/engines/bin/lessc")
  '(list-directory-verbose-switches "-lh")
- '(magit-git-executable "/usr/local/bin/git")
- '(python-pep8-command "~/bin/pep8")
+ '(magit-git-executable "/usr/bin/git")
  '(remote-shell-program "/usr/bin/ssh")
  '(rst-level-face-base-light 15)
  '(safe-local-variable-values (quote ((todo-categories "HOME") (todo-categories "WAT"))))
@@ -330,17 +327,16 @@
  '(shell-switcher-mode t)
  '(shell-switcher-new-shell-function (quote shell-switcher-make-shell))
  '(tool-bar-mode nil)
- '(transient-mark-mode t)
+ '(tool-bar-position (quote right))
  '(virtualenv-root "~/dev"))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:stipple nil :background "gray5" :foreground "pale goldenrod" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal))))
+ '(default ((t (:stipple nil :background "gray5" :foreground "pale goldenrod" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :family "Ubuntu Mono" :foundry "unknown" :height 157 :width normal))))
  '(flymake-errline ((((class color)) (:background "DarkRed")))))
 ;;'(default ((t (:stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal)))))
-
 
 
 (defun beautify-json ()
