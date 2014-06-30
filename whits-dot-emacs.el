@@ -1,8 +1,11 @@
 ;;(setq mac-command-modifier 'meta) ;; aquamacs only
 (setq load-path  (cons (expand-file-name "~/.emacs.d/local") load-path))
 
+;; packages
 (require 'package)
 (package-initialize)
+(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+
 
 (add-to-list 'load-path "/Users/whit/.emacs.d/")
 ;;(add-to-list 'load-path "/usr/local/share/git-core/contrib/emacs/")
@@ -15,9 +18,9 @@
 
 ;; yasnippet
 ;;(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
-(require 'io-mode)
+;;(require 'io-mode)
+;;(require 'io-mode-inf)
 (require 'python-mode)
-(require 'io-mode-inf)
 (require 'css-mode)
 (require 'flymake)
 (require 'json)
@@ -41,35 +44,31 @@
 (setq ac-auto-start 2)
 (define-key ac-complete-mode-map "\M-/" 'ac-stop)
 
+(transient-mark-mode t)
+(setq-default transient-mark-mode t)
+
+;; set default mode
+(setq major-mode 'org-mode)
+
+
 ;; org mode
 (global-set-key "\C-cl" 'org-store-link)
 (global-set-key "\C-cc" 'org-capture)
 (global-set-key "\C-ca" 'org-agenda)
 (global-set-key "\C-cb" 'org-iswitchb)
 (global-set-key "\M-`" 'other-frame)
-(transient-mark-mode t)
-
-
-;; set default mode
-(setq major-mode 'org-mode)
 
 ;; rst
 (add-hook 'text-mode-hook 'rst-text-mode-bindings)
 (add-hook 'rst-adjust-hook 'rst-toc-update)
 (setq rst-mode-lazy nil)
 
-;; packages
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-
-
-;;(yas/initialize)-
-;;(yas/load-directory "~/.emacs.d/plugins/yasnippet/snippets")
-
 
 (add-hook 'today-visible-calendar-hook 'calendar-mark-today)
 
 
-(setq-default transient-mark-mode t)
+
+
 (set-cursor-color "light blue")
 (which-function-mode)
 (setq load-path  (cons (expand-file-name "~/.emacs.d/") load-path))
@@ -81,7 +80,7 @@
 (autoload 'pymacs-apply "pymacs")
 (autoload 'pymacs-call "pymacs")
 (eval-after-load "pymacs"
-  '(add-to-list 'pymacs-load-path "/Users/whit/dev/elisp/lib/python2.6/site-packages"))
+  '(add-to-list 'pymacs-load-path "/Users/whit/dev/elisp/lib/python2.7/site-packages"))
 
 ;; javascript mode
 (require 'js2-mode)
@@ -142,7 +141,7 @@
 (fset 'review
       "#@@ DWM: ")
 
-(add-hook 'python-mode-hook 'flycheck-mode)
+;;(add-hook 'python-mode-hook 'flycheck-mode)
 (add-hook 'python-mode-hook '(lambda () (require 'virtualenv)))
 (add-hook 'python-mode-hook
 		  '(lambda ()
@@ -153,11 +152,11 @@
 
 (defvar gud-pdb-marker-regexp "^> \\([-a-zA-Z0-9_/.:\\ ()]*\\|<string>\\)(\\([0-9]+\\))\\([a-zA-Z0-9_]*\\|\\?\\)()\\(->[^\n]*\\)?\n")
 
-;; (defadvice pdb (before gud-query-cmdline activate)
-;;     \"Provide a better default command line when called interactively.\"
-;;     (interactive
-;;      (list (gud-query-cmdline '/usr/lib/python2.3/pdb.py
-;; 			      (file-name-nondirectory buffer-file-name)))))
+(defadvice pdb (before gud-query-cmdline activate)
+    \"Provide a better default command line when called interactively.\"
+    (interactive
+     (list (gud-query-cmdline /usr/lib/python2.7/'
+			      (file-name-nondirectory buffer-file-name)))))
 
 (setq tramp-default-method "ssh")
 
@@ -215,16 +214,16 @@
 (add-hook 'find-file-hook 'flymake-find-file-hook)
 
 
-;; Work around bug in flymake that causes Emacs to hang when you open a
-;; docstring.
-(delete '(" *\\(\\[javac\\]\\)? *\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)" 2 4 nil 5)
-        flymake-err-line-patterns)
+;; ;; Work around bug in flymake that causes Emacs to hang when you open a
+;; ;; docstring.
+;; (delete '(" *\\(\\[javac\\]\\)? *\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)" 2 4 nil 5)
+;;         flymake-err-line-patterns)
 
 
-(delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
-        flymake-err-line-patterns)
+;; (delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
+;;         flymake-err-line-patterns)
 
-(add-hook 'python-mode-hook 'whitespace-mode)
+;;(add-hook 'python-mode-hook 'whitespace-mode)
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
