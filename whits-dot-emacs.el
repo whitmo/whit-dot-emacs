@@ -1,6 +1,7 @@
 ;;(setq mac-command-modifier 'meta) ;; aquamacs only
 (setq load-path  (cons (expand-file-name "~/.emacs.d/local") load-path))
 
+
 ;; packages
 (require 'package)
 (package-initialize)
@@ -20,9 +21,9 @@
 ;;(add-to-list 'load-path "~/.emacs.d/plugins/yasnippet")
 ;;(require 'io-mode)
 ;;(require 'io-mode-inf)
+(require 'dockerfile-mode)
 (require 'python-mode)
 (require 'css-mode)
-(require 'flymake)
 (require 'json)
 (require 'rst)
 (require 'sgml-mode)
@@ -80,7 +81,7 @@
 (autoload 'pymacs-apply "pymacs")
 (autoload 'pymacs-call "pymacs")
 (eval-after-load "pymacs"
-  '(add-to-list 'pymacs-load-path "/Users/whit/dev/elisp/lib/python2.7/site-packages"))
+  '(add-to-list 'pymacs-load-path "/home/whit/dev/elisp/lib/python2.7/site-packages"))
 
 ;; javascript mode
 (require 'js2-mode)
@@ -132,6 +133,8 @@
 (autoload 'pyrex-mode "pyrex-mode" "Pyrex editing mode." t)
 (autoload 'doctest-mode "doctest-mode" "doctest editing mode." t)
 
+
+
 (fset 'break
       "import pdb;pdb.set_trace()\C-a\C-i")
 
@@ -141,7 +144,7 @@
 (fset 'review
       "#@@ DWM: ")
 
-;;(add-hook 'python-mode-hook 'flycheck-mode)
+(add-hook 'python-mode-hook 'flycheck-mode)
 (add-hook 'python-mode-hook '(lambda () (require 'virtualenv)))
 (add-hook 'python-mode-hook
 		  '(lambda ()
@@ -157,6 +160,12 @@
     (interactive
      (list (gud-query-cmdline /usr/lib/python2.7/'
 			      (file-name-nondirectory buffer-file-name)))))
+
+
+(defvar py-flake8-history nil
+  "Used by flake8, resp. py-flake8-command.
+
+Default is nil. ")
 
 (setq tramp-default-method "ssh")
 
@@ -199,35 +208,36 @@
 (put 'scroll-left 'disabled nil)
 
 ;;Run pyflakes with flymake.
-(when (load "flymake" t)
-  (defun flymake-pyflakes-init ()
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       'flymake-create-temp-inplace))
-           (local-file (file-relative-name
-                        temp-file
-                        (file-name-directory buffer-file-name))))
-      (list "pyflakes" (list local-file))))
+;; (when (load "flymake" t)
+;;   (defun flymake-pyflakes-init ()
+;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;;                        'flymake-create-temp-inplace))
+;;            (local-file (file-relative-name
+;;                         temp-file
+;;                         (file-name-directory buffer-file-name))))
+;;       (list "pyflakes" (list local-file))))
 
-  (add-to-list 'flymake-allowed-file-name-masks
-               '("\\.py\\'" flymake-pyflakes-init)))
+;;   (add-to-list 'flymake-allowed-file-name-masks
+;;                '("\\.py\\'" flymake-pyflakes-init)))
 
-(add-hook 'find-file-hook 'flymake-find-file-hook)
-
-
-;; ;; Work around bug in flymake that causes Emacs to hang when you open a
-;; ;; docstring.
-;; (delete '(" *\\(\\[javac\\]\\)? *\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)" 2 4 nil 5)
-;;         flymake-err-line-patterns)
+;; (require 'flymake)
+;; (add-hook 'find-file-hook 'flymake-find-file-hook)
 
 
-;; (delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
-;;         flymake-err-line-patterns)
+;; Work around bug in flymake that causes Emacs to hang when you open a
+;; docstring.
+(delete '(" *\\(\\[javac\\]\\)? *\\(\\([a-zA-Z]:\\)?[^:(\t\n]+\\)\:\\([0-9]+\\)\:[ \t\n]*\\(.+\\)" 2 4 nil 5)
+        flymake-err-line-patterns)
+
+
+(delete '(" *\\(\\[javac\\] *\\)?\\(\\([a-zA-Z]:\\)?[^:(        \n]+\\):\\([0-9]+\\):[  \n]*\\(.+\\)" 2 4 nil 5)
+        flymake-err-line-patterns)
 
 ;;(add-hook 'python-mode-hook 'whitespace-mode)
 (autoload 'ansi-color-for-comint-mode-on "ansi-color" nil t)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 
-(add-hook 'ruby-mode-hook 'flymake-ruby-load)
+;;(add-hook 'ruby-mode-hook 'flymake-ruby-load)
 
 ;; avoid hangs launching warning box
 (setq flymake-gui-warnings-enabled nil)
