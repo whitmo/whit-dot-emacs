@@ -1,0 +1,8 @@
+;; Object gh/gh-gist-api/whitmo
+;; EIEIO PERSISTENT OBJECT
+(gh-cache "gh/gh-gist-api/whitmo"
+  :file "whitmo"
+  :version "gh-0.2"
+  :entries #s(hash-table size 65 test equal rehash-size 1.5 rehash-threshold 0.8 data ())
+  :timestamp 1408140811.8899598
+  )
