@@ -5,7 +5,12 @@
 ;; packages
 (require 'package)
 (package-initialize)
-(add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/"))
+(add-to-list 'package-archives
+             '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/"))
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
 
 
 (add-to-list 'load-path "/Users/whit/.emacs.d/")
@@ -329,6 +334,7 @@ Default is nil. ")
  '(js2-basic-offset 4)
  '(list-directory-verbose-switches "-lh")
  '(magit-git-executable "/usr/bin/git")
+ '(py-start-run-ipython-shell t)
  '(remote-shell-program "/usr/bin/ssh")
  '(rst-level-face-base-light 15)
  '(safe-local-variable-values (quote ((todo-categories "HOME") (todo-categories "WAT"))))
