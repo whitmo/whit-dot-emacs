@@ -5,10 +5,12 @@
 ;; packages
 (require 'package)
 (package-initialize)
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/"))
+;;(add-to-list 'package-archives
+;;             '("melpa" . "http://melpa.milkbox.net/packages/"))
+
 (add-to-list 'package-archives
              '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/"))
+
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/"))
 
@@ -324,7 +326,7 @@ Default is nil. ")
  '(dired-recursive-deletes (quote top))
  '(dirtrack-list ("^.*:\\([^$]*\\)\\$" 1))
  '(dvc-tips-enabled nil)
- '(exec-path (quote ("/usr/bin" "/bin" "/usr/sbin" "/sbin" "/usr/local/bin" "/Users/whit/dev/elisp/bin/")))
+ '(exec-path (quote ("/home/whit/.gvm/pkgsets/go1.2.1/global/bin" "/usr/bin" "/bin" "/usr/sbin" "/sbin" "/usr/local/bin" "/Users/whit/dev/elisp/bin/")))
  '(flycheck-highlighting-mode (quote sexps))
  '(global-font-lock-mode t nil (font-lock))
  '(grep-command "grep -nri -e ")
@@ -353,6 +355,8 @@ Default is nil. ")
  '(flymake-errline ((((class color)) (:background "DarkRed")))))
 ;;'(default ((t (:stipple nil :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal)))))
 
+
+;;(exec-path-from-shell-copy-env "GOPATH")
 
 (defun beautify-json ()
   (interactive)
