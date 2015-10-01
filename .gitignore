@@ -10,3 +10,4 @@ session.*
 /.cask/
 /recentf
 /savehist
+*\#
