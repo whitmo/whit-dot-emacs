@@ -7,3 +7,6 @@ tutorial/*
 session.*
 /elpa/ghc-20141003.1239/ghc-rewrite.el
 /elpa
+/.cask/
+/recentf
+/savehist
