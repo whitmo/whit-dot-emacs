@@ -52,14 +52,25 @@
                     :repo "copilot-emacs/copilot.el"
                     :branch "main"
                     :files ("dist" "*.el")))
-  :bind (:map copilot-completion-map
-              ("<tab>" . copilot-accept-completion)
-              ("TAB" . copilot-accept-completion)
-              ("C-TAB" . copilot-accept-completion-by-word)
-              ("C-<tab>" . copilot-accept-completion-by-word)
-              ("M-[" . copilot-previous-completion)
-              ("M-]" . copilot-next-completion))
+  :bind (("C-c t c" . copilot-toggle-buffer)
+         :map copilot-completion-map
+         ("<tab>" . copilot-accept-completion)
+         ("TAB" . copilot-accept-completion)
+         ("C-TAB" . copilot-accept-completion-by-word)
+         ("C-<tab>" . copilot-accept-completion-by-word)
+         ("M-[" . copilot-previous-completion)
+         ("M-]" . copilot-next-completion))
   :hook (prog-mode . copilot-mode)
+  :config
+  (defun copilot-toggle-buffer ()
+    "Toggle copilot mode in current buffer."
+    (interactive)
+    (if copilot-mode
+        (progn
+          (copilot-mode -1)
+          (message "Copilot disabled in current buffer"))
+      (copilot-mode 1)
+      (message "Copilot enabled in current buffer")))
   :config
   ;; Enable Copilot globally
   (global-copilot-mode))
