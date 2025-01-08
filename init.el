@@ -39,3 +39,4 @@
 (use-package init-general  :demand t)
 (use-package init-ai  :demand t)
 (use-package init-music  :demand t)
+(use-package init-aider  :demand t)
