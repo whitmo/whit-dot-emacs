@@ -66,7 +66,7 @@
   :bind (([M-p M-p] . break)
          ([M-p M-m] . postmortem)
          ([M-p M-r] . review))
-  :hook (copilot-mode . python-mode)
+  ;; :hook (copilot-mode . python-mode)
   :hook (fly-check-mode . python-mode)
   :hook (comint-output-filter-functions . python-pdbtrack-comint-output-filter-function)
 )

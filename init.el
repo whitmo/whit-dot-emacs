@@ -1,9 +1,13 @@
 ;; config the emax!
-(require 'package)
 
+(require 'package)
 
 (add-to-list 'package-archives
 	     '("melpa" . "https://melpa.org/packages/") t)
+
+(add-to-list 'package-archives
+             '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+
 (add-to-list 'package-archives
 	     '("jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/") t)
 
