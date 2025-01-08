@@ -30,6 +30,11 @@
 
 (require 'bind-key)
 
+;; Load environment management early
+(use-package init-env
+  :demand t
+  :load-path "lisp")
+
 (unless (package-installed-p 'quelpa)
   (package-refresh-contents)
   (package-install 'quelpa))

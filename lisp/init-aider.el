@@ -29,8 +29,6 @@
 (use-package aider
   :custom
   (aider-args '("--model" "anthropic/claude-3-5-sonnet-20241022"))
-  :config
-  (setenv "ANTHROPIC_API_KEY" (getenv "ANTHROPIC_API_KEY"))
   :bind
   ("C-c a" . aider-transient-menu))
 
