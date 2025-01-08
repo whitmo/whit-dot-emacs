@@ -2,15 +2,26 @@
 
 ;;; Commentary:
 ;;
-;;(require 'use-package)
+(require 'package)
+(package-initialize)
+
+(unless package-archive-contents
+  (package-refresh-contents))
+
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
+(require 'use-package)
 
 ;; Initialize quelpa
 (unless (package-installed-p 'quelpa)
   (package-refresh-contents)
   (package-install 'quelpa))
 
-(unless (package-installed-p 'quelpa-use-package)
-  (package-install 'quelpa-use-package))
+(quelpa
+ '(quelpa-use-package
+   :fetcher git
+   :url "https://github.com/quelpa/quelpa-use-package.git"))
 
 (require 'quelpa-use-package)
 
@@ -52,16 +63,5 @@
   :init
   (setq google-gemini-key (getenv "GOOGLE_GEMINI_API_KEY"))
   :ensure t)
-
-;; (quelpa
-;;  '(quelpa-use-package
-;;    :fetcher git
-;;    :url "https://github.com/quelpa/quelpa-use-package.git"))
-
-(require 'quelpa-use-package)
-
-
-
-
 
 (provide 'init-ai)
