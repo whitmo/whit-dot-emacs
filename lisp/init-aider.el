@@ -5,6 +5,12 @@
 
 (require 'use-package)
 
+;; Declare custom variables
+(defcustom aider-args nil
+  "Arguments to pass to aider command line tool."
+  :type '(repeat string)
+  :group 'aider)
+
 (use-package aider
   :quelpa (aider :fetcher github :repo "tninja/aider.el")
   :config
