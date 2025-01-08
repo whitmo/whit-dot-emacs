@@ -13,10 +13,8 @@
   :group 'aider)
 
 (use-package aider
-  :quelpa ((aider :fetcher github
-                  :repo "tninja/aider.el"
-                  :files ("*.el"))
-           :upgrade t)
+  :quelpa (aider :fetcher github
+                 :repo "tninja/aider.el")
   :custom
   (aider-args '("--model" "anthropic/claude-3-5-sonnet-20241022"))
   :config

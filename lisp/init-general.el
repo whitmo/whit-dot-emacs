@@ -76,8 +76,16 @@
 (use-package gh :ensure t)
 
 
-(use-package quelpa :ensure t)
-(use-package quelpa-use-package :ensure t)
+(use-package quelpa
+  :ensure t
+  :custom
+  (quelpa-checkout-melpa-p nil)
+  (quelpa-update-melpa-p nil))
+
+(use-package quelpa-use-package
+  :ensure t
+  :init
+  (require 'quelpa-use-package))
 (use-package editorconfig :ensure t)
 
 
