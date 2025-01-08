@@ -3,7 +3,16 @@
 ;;; Commentary:
 ;; Configuration for aider.el integration
 
-;;(require 'use-package)
+(require 'package)
+(package-initialize)
+
+(unless (package-installed-p 'quelpa)
+  (package-refresh-contents)
+  (package-install 'quelpa))
+
+(unless (package-installed-p 'quelpa-use-package)
+  (package-install 'quelpa-use-package))
+
 (require 'quelpa-use-package)
 
 ;; Declare custom variables
