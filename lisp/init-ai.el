@@ -22,11 +22,11 @@
   (copilot-chat-shell-maker-init))
 
 (use-package copilot
-  :quelpa (copilot :fetcher github
-                   :repo "copilot-emacs/copilot.el"
-                   :branch "main"
-                   :files ("dist" "*.el")
-		   )
+  :quelpa ((copilot :fetcher github
+                    :repo "copilot-emacs/copilot.el"
+                    :branch "main"
+                    :files ("dist" "*.el"))
+           :upgrade t)
   :bind (
 	 :map copilot-mode-map
    	 ("<tab>" . copilot-accept-completion)
