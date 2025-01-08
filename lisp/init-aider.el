@@ -3,8 +3,8 @@
 ;;; Commentary:
 ;; Configuration for aider.el integration
 
-(require 'use-package)
-
+;;(require 'use-package)
+(require 'quelpa-use-package)
 ;; Declare custom variables
 (defcustom aider-args nil
   "Arguments to pass to aider command line tool."
