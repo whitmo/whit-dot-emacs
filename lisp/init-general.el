@@ -73,8 +73,6 @@
 
 
 
-(use-package gh :ensure t)
-
 
 (use-package quelpa
   :ensure t
