@@ -5,6 +5,7 @@
 
 ;;(require 'use-package)
 (require 'quelpa-use-package)
+
 ;; Declare custom variables
 (defcustom aider-args nil
   "Arguments to pass to aider command line tool."
@@ -12,7 +13,7 @@
   :group 'aider)
 
 (use-package aider
-  :quelpa ((aider :fetcher github 
+  :quelpa ((aider :fetcher github
                   :repo "tninja/aider.el"
                   :files ("*.el"))
            :upgrade t)
