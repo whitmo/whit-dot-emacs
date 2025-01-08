@@ -27,7 +27,22 @@
 
 ;; -- copilot --
 
-(use-package s)
+(use-package s :ensure t)
+(use-package f :ensure t)
+
+(use-package copilot
+  ;; :quelpa ((copilot :fetcher github
+  ;;                   :repo "copilot-emacs/copilot.el"
+  ;;                   :branch "main"
+  ;;                   :files ("dist" "*.el"))
+  ;;          :upgrade t)
+  :bind (
+	 :map copilot-mode-map
+   	 ("<tab>" . copilot-accept-completion)
+   	 ("TAB" . copilot-accept-completion)
+   	 )
+  :hook (prog-mode . copilot-mode)
+  )
 
 ;; (define-key copilot-completion-map (kbd "<tab>") #'copilot-accept-completion)
 ;; (define-key copilot-completion-map (kbd "TAB") #'copilot-accept-completion)
@@ -42,19 +57,6 @@
   (push '(shell-maker . copilot-chat-shell-maker-init) copilot-chat-frontend-list)
   (copilot-chat-shell-maker-init))
 
-(use-package copilot
-  :quelpa ((copilot :fetcher github
-                    :repo "copilot-emacs/copilot.el"
-                    :branch "main"
-                    :files ("dist" "*.el"))
-           :upgrade t)
-  :bind (
-	 :map copilot-mode-map
-   	 ("<tab>" . copilot-accept-completion)
-   	 ("TAB" . copilot-accept-completion)
-   	 )
-  :hook (prog-mode . copilot-mode)
-  )
 ;;(use-package chatgpt :ensure t)
 
 ;;(setq openai-key "***REMOVED***")
