@@ -26,6 +26,12 @@
 
 (require 'bind-key)
 
+(unless (package-installed-p 'quelpa)
+  (package-refresh-contents)
+  (package-install 'quelpa))
+
+(unless (package-installed-p 'quelpa-use-package)
+  (package-install 'quelpa-use-package))
 
 (defconst whit-lisp
   (expand-file-name "lisp" user-emacs-directory)
