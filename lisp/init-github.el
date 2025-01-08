@@ -6,15 +6,19 @@
 ;;; Code:
 (require 'use-package)
 
-;; Ensure quelpa is available for Copilot
+;; Ensure quelpa and quelpa-use-package are available
+(package-initialize)
 (unless (package-installed-p 'quelpa)
   (package-refresh-contents)
   (package-install 'quelpa))
 
+(require 'quelpa)
 (unless (package-installed-p 'quelpa-use-package)
-  (package-install 'quelpa-use-package))
-
-(require 'quelpa-use-package)
+  (quelpa
+   '(quelpa-use-package
+     :fetcher git
+     :url "https://github.com/quelpa/quelpa-use-package.git"))
+  (require 'quelpa-use-package))
 
 ;; GitHub API client
 (use-package gh
