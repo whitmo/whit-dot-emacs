@@ -4,6 +4,16 @@
 ;;
 ;;(require 'use-package)
 
+;; Initialize quelpa
+(unless (package-installed-p 'quelpa)
+  (package-refresh-contents)
+  (package-install 'quelpa))
+
+(unless (package-installed-p 'quelpa-use-package)
+  (package-install 'quelpa-use-package))
+
+(require 'quelpa-use-package)
+
 ;; -- copilot --
 
 (use-package s)
@@ -55,9 +65,3 @@
 
 
 (provide 'init-ai)
-;; (quelpa
-;;  '(quelpa-use-package
-;;    :fetcher git
-;;    :url "https://github.com/quelpa/quelpa-use-package.git"))
-
-(require 'quelpa-use-package)
