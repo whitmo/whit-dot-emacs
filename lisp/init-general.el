@@ -66,13 +66,10 @@
   :bind (([M-p M-p] . break)
          ([M-p M-m] . postmortem)
          ([M-p M-r] . review))
-  ;; :hook (copilot-mode . python-mode)
+
   :hook (fly-check-mode . python-mode)
   :hook (comint-output-filter-functions . python-pdbtrack-comint-output-filter-function)
 )
-
-
-
 
 (use-package quelpa
   :ensure t
@@ -86,9 +83,6 @@
   (require 'quelpa-use-package))
 (use-package editorconfig :ensure t)
 
-
-
-;; optionally load and return environmental variable `GOOGLE_GEMINI_API_KEY`
 
 (load "tramp")
 (setq tramp-default-method "ssh")

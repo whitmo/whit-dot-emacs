@@ -30,36 +30,36 @@
 (use-package s :ensure t)
 (use-package f :ensure t)
 
-(use-package copilot
-  ;; :quelpa ((copilot :fetcher github
-  ;;                   :repo "copilot-emacs/copilot.el"
-  ;;                   :branch "main"
-  ;;                   :files ("dist" "*.el"))
-  ;;          :upgrade t)
-  :bind (
-	 :map copilot-mode-map
-   	 ("<tab>" . copilot-accept-completion)
-   	 ("TAB" . copilot-accept-completion)
-   	 )
-  :hook (prog-mode . copilot-mode)
-  )
+;; (use-package copilot
+;;   ;; :quelpa ((copilot :fetcher github
+;;   ;;                    :repo "copilot-emacs/copilot.el"
+;;   ;;                    :branch "main"
+;;   ;;                    :files ("dist" "*.el"))
+;;   ;;           :upgrade t)
+;;   :bind (
+;; 	 :map copilot-mode-map
+;;    	 ("<tab>" . copilot-accept-completion)
+;;    	 ("TAB" . copilot-accept-completion)
+;;    	 )
+;;   :hook (prog-mode . copilot-mode)
+;;   )
 
-;; (define-key copilot-completion-map (kbd "<tab>") #'copilot-accept-completion)
-;; (define-key copilot-completion-map (kbd "TAB") #'copilot-accept-completion)
+;; ;; (define-key copilot-completion-map (kbd "<tab>") #'copilot-accept-completion)
+;; ;; (define-key copilot-completion-map (kbd "TAB") #'copilot-accept-completion)
 
-(use-package copilot-chat
-  :ensure t
-  :after (request shell-maker)
-  :custom
-  (copilot-chat-frontend 'shell-maker)
-  :config
-  (require 'copilot-chat-shell-maker)
-  (push '(shell-maker . copilot-chat-shell-maker-init) copilot-chat-frontend-list)
-  (copilot-chat-shell-maker-init))
+;; (use-package copilot-chat
+;;   :ensure t
+;;   :after (request shell-maker)
+;;   :custom
+;;   (copilot-chat-frontend 'shell-maker)
+;;   :config
+;;   (require 'copilot-chat-shell-maker)
+;;   (push '(shell-maker . copilot-chat-shell-maker-init) copilot-chat-frontend-list)
+;;   (copilot-chat-shell-maker-init))
 
 ;;(use-package chatgpt :ensure t)
 
-;;(setq openai-key "***REMOVED***")
+;;(setq openai-key getenv("OPENAI_API_KEY"))
 
 (use-package "google-gemini"
   :init
