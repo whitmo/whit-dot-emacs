@@ -63,26 +63,29 @@
 
 (use-package python
   :ensure t
-  :bind (([M-p M-p] . break)
-         ([M-p M-m] . postmortem)
-         ([M-p M-r] . review))
-
-  :hook (fly-check-mode . python-mode)
-  :hook (comint-output-filter-functions . python-pdbtrack-comint-output-filter-function)
+  :bind  (:map python-mode-map
+	       ("M-p M-p" . break)
+	       ("M-p M-m" . postmortem)
+	       ("M-p M-r" . review))
+  :hook ((python-mode . flymake-mode)
+         (python-mode . fly-check-mode)
+         (python-mode . (lambda ()
+                          (add-hook 'comint-output-filter-functions
+                                    'python-pdbtrack-comint-output-filter-function))))
 )
 
-(use-package quelpa
-  :ensure t
-  :custom
-  (quelpa-checkout-melpa-p nil)
-  (quelpa-update-melpa-p nil))
+;; (use-package quelpa
+;;   :ensure t
+;;   :custom
+;;   (quelpa-checkout-melpa-p nil)
+;;   (quelpa-update-melpa-p nil))
 
-(use-package quelpa-use-package
-  :ensure t
-  :init
-  (require 'quelpa-use-package))
+;; (use-package quelpa-use-package
+;;   :ensure t
+;;   :init
+;;   (require 'quelpa-use-package))
+
 (use-package editorconfig :ensure t)
-
 
 (load "tramp")
 (setq tramp-default-method "ssh")
