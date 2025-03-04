@@ -70,8 +70,9 @@
   :hook ((python-mode . flymake-mode)
          (python-mode . fly-check-mode)
          (python-mode . (lambda ()
-                          (add-hook 'comint-output-filter-functions
-                                    'python-pdbtrack-comint-output-filter-function))))
+                          (when (fboundp 'python-pdbtrack-comint-output-filter-function)
+                            (add-hook 'comint-output-filter-functions
+                                      'python-pdbtrack-comint-output-filter-function)))))
 )
 
 ;; (use-package quelpa
@@ -91,9 +92,12 @@
 (setq tramp-default-method "ssh")
 
 (defun my-shell-mode-hook ()
-  (add-hook
-   'comint-output-filter-functions
-   'python-pdbtrack-comint-output-filter-function t))
+  ;; Make sure python is loaded before using python functions
+  (require 'python)
+  (when (fboundp 'python-pdbtrack-comint-output-filter-function)
+    (add-hook
+     'comint-output-filter-functions
+     'python-pdbtrack-comint-output-filter-function t)))
 
 (add-hook 'shell-mode-hook 'my-shell-mode-hook)
 
