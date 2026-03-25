@@ -4,12 +4,7 @@
 ;;
 (require 'use-package)
 
-
-
 (use-package s :ensure t)
-
-
-
 
 ;;(setq openai-key getenv("OPENAI_API_KEY"))
 
