@@ -1,12 +1,13 @@
 ((aider-transient-menu nil)
+ (claude-code-transient nil)
+ (copilot-chat-transient nil)
  (magit-branch nil)
  (magit-commit nil)
  (magit-diff
   ("--no-ext-diff" "--stat"))
  (magit-dispatch nil)
- (magit-fetch
-  ("--prune")
-  nil)
+ (magit-fetch nil
+	      ("--prune"))
  (magit-gitignore nil)
  (magit-log
   ("-n256" "--graph" "--decorate")
@@ -15,13 +16,13 @@
   ("-n256" "--decorate")
   (("--" "clients/softcut_jack_osc/CMakeLists.txt")))
  (magit-merge nil)
- (magit-pull
-  ("--ff-only")
-  ("--rebase"))
+ (magit-pull nil
+	     ("--ff-only")
+	     ("--rebase"))
  (magit-push nil
 	     ("--force-with-lease"))
- (magit-stash
-  ("--include-untracked")
-  nil)
+ (magit-stash nil
+	      ("--include-untracked"))
+ (magit-submodule nil)
  (magit-tag nil)
  (magit-worktree nil))

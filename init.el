@@ -26,19 +26,7 @@
 
 (eval-when-compile (require 'use-package))
 
-(require 'bind-key)
-
-;; Load environment management early
-(use-package init-env
-  :demand t
-  :load-path "lisp")
-
-(unless (package-installed-p 'quelpa)
-  (package-refresh-contents)
-  (package-install 'quelpa))
-
-(unless (package-installed-p 'quelpa-use-package)
-  (package-install 'quelpa-use-package))
+;;(require 'bind-key)
 
 (defconst whit-lisp
   (expand-file-name "lisp" user-emacs-directory)
@@ -46,20 +34,31 @@
 
 (add-to-list 'load-path whit-lisp)
 
+;; Load environment management early
+(use-package init-env
+  :demand t
+  :load-path whit-lisp)
 
 (use-package init-whit  :demand t)
-(use-package init-env  :demand t)
 (use-package init-customvar  :demand t)
 (use-package init-general  :demand t)
 (use-package init-ai  :demand t)
 (use-package init-music  :demand t)
-(use-package init-aider  :demand t)
 (use-package init-github  :demand t)
+
+(unless (package-installed-p 'claude-code)
+  (package-vc-install "https://github.com/yuya373/claude-code-emacs"))
+
+(use-package init-claude-code  :demand t)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(aider-args
+   '("--sonnet " "--cache-prompts" "--cache-keepalive-pings=3") nil nil "Customized with use-package aider")
+ '(aider-program "aidr")
  '(case-fold-search t)
  '(current-language-environment "English")
  '(custom-safe-themes
@@ -72,13 +71,14 @@
  '(global-font-lock-mode t nil (font-lock))
  '(grep-command "grep -nri -e ")
  '(grep-find-command
-   "find . -not -path \"*.git\" -not -path \"*pyc\" -type f -print0 | xargs -0 grep -in -e ")
+   "find . -not -path \"*~\" -path \"*.git\" -not -path \"*pyc\" -type f -print0 | xargs -0 grep -in -e ")
  '(inhibit-startup-screen t)
  '(js2-basic-offset 4)
  '(list-directory-verbose-switches "-lh")
- '(magit-git-executable "/usr/bin/git")
+ '(magit-git-executable "/usr/bin/git" t)
+ '(nil nil t)
  '(package-selected-packages
-   '(todoist aider shell-here shell-switcher ruff-format flymake-ruff editorconfig quelpa-use-package quelpa gh openai js2-mode json-mode web-mode magit ample-theme leaf use-package))
+   '(mcp-server-lib lua-mode tmux-pane emamux cargo cargo-mode rust-playground claude-code claude-shell flycheck-golangci-lint go-mode magnus flycheck-yamllint yaml-mode aider shell-here shell-switcher ruff-format flymake-ruff editorconfig quelpa gh openai js2-mode json-mode web-mode magit ample-theme leaf use-package))
  '(package-vc-selected-packages '((aider :url "https://github.com/tninja/aider.el")))
  '(py-start-run-ipython-shell t)
  '(remote-shell-program "/usr/bin/ssh")
@@ -90,7 +90,8 @@
  '(tool-bar-mode nil)
  '(tool-bar-position 'right)
  '(tool-bar-style 'text)
- '(virtualenv-root "/Users/whit/.venv"))
+ '(warning-suppress-log-types '((use-package)))
+ '(warning-suppress-types '((copilot copilot-no-mode-indent))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

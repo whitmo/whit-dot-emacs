@@ -6,28 +6,24 @@
 ;;; Code:
 (require 'use-package)
 
-;; Ensure quelpa and quelpa-use-package are available
-(package-initialize)
-(unless (package-installed-p 'quelpa)
-  (package-refresh-contents)
-  (package-install 'quelpa))
-
-(require 'quelpa)
-(unless (package-installed-p 'quelpa-use-package)
-  (quelpa
-   '(quelpa-use-package
-     :fetcher git
-     :url "https://github.com/quelpa/quelpa-use-package.git"))
-  (require 'quelpa-use-package))
 
 ;; GitHub API client
 (use-package gh
   :ensure t
   :defer t)
 
+;; Transient from MELPA (magit requires >= 0.12, Emacs 29.4 bundles older)
+(use-package transient
+  :ensure t)
+
+;; Keep magit-section in sync with magit
+(use-package magit-section
+  :ensure t)
+
 ;; Magit configuration
 (use-package magit
   :ensure t
+  :after transient
   :init
   (setq magit-git-executable "/usr/bin/git")
   :bind (("<f6>" . magit-status)  ; Keep existing binding
@@ -37,56 +33,8 @@
          ("C-c g c" . magit-checkout)
          ("C-c g p" . magit-push))
   :config
-  (setq magit-display-buffer-function 
+  (setq magit-display-buffer-function
         #'magit-display-buffer-same-window-except-diff-v1))
-
-;; Dependencies for Copilot
-(use-package dash :ensure t)
-(use-package s :ensure t)
-(use-package editorconfig :ensure t)
-
-;; GitHub Copilot
-(use-package copilot
-  :ensure nil
-  :quelpa ((copilot :fetcher github
-                    :repo "copilot-emacs/copilot.el"
-                    :branch "main"
-                    :files ("dist" "*.el")))
-  :bind (("C-c t c" . copilot-toggle-buffer)
-         :map copilot-completion-map
-         ("<tab>" . copilot-accept-completion)
-         ("TAB" . copilot-accept-completion)
-         ("C-TAB" . copilot-accept-completion-by-word)
-         ("C-<tab>" . copilot-accept-completion-by-word)
-         ("M-[" . copilot-previous-completion)
-         ("M-]" . copilot-next-completion))
-  :hook (prog-mode . copilot-mode)
-  :config
-  (defun copilot-toggle-buffer ()
-    "Toggle copilot mode in current buffer."
-    (interactive)
-    (if copilot-mode
-        (progn
-          (copilot-mode -1)
-          (message "Copilot disabled in current buffer"))
-      (copilot-mode 1)
-      (message "Copilot enabled in current buffer")))
-  :config
-  ;; Enable Copilot globally
-  (global-copilot-mode))
-
-;; Copilot Chat
-(use-package copilot-chat
-  :ensure nil
-  :quelpa ((copilot-chat :fetcher github
-                         :repo "copilot-emacs/copilot-chat.el"
-                         :branch "main"))
-  :after copilot
-  :bind (("C-c c c" . copilot-chat)
-         ("C-c c e" . copilot-chat-explain-code)
-         ("C-c c t" . copilot-chat-generate-tests))
-  :config
-  (setq copilot-chat-auth-source "~/.authinfo.gpg"))
 
 ;; GitHub Codespaces
 (use-package codespaces

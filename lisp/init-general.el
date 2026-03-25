@@ -68,23 +68,9 @@
 	       ("M-p M-m" . postmortem)
 	       ("M-p M-r" . review))
   :hook ((python-mode . flymake-mode)
-         (python-mode . fly-check-mode)
-         (python-mode . (lambda ()
-                          (when (fboundp 'python-pdbtrack-comint-output-filter-function)
-                            (add-hook 'comint-output-filter-functions
-                                      'python-pdbtrack-comint-output-filter-function)))))
+         (python-mode . fly-check-mode))
 )
 
-;; (use-package quelpa
-;;   :ensure t
-;;   :custom
-;;   (quelpa-checkout-melpa-p nil)
-;;   (quelpa-update-melpa-p nil))
-
-;; (use-package quelpa-use-package
-;;   :ensure t
-;;   :init
-;;   (require 'quelpa-use-package))
 
 (use-package editorconfig :ensure t)
 
@@ -92,7 +78,7 @@
 (setq tramp-default-method "ssh")
 
 (defun my-shell-mode-hook ()
-  ;; Make sure python is loaded before using python functions
+  "Enable pdb tracking in shell buffers."
   (require 'python)
   (when (fboundp 'python-pdbtrack-comint-output-filter-function)
     (add-hook
@@ -106,5 +92,32 @@
 
 (use-package "shell-here"
   :ensure t)
+
+(use-package yaml-mode
+  :ensure t
+  :mode "\\.ya?ml\\'")
+
+;; golang
+(use-package go-mode
+  :ensure t
+  :hook ((go-mode . flymake-mode)
+         (before-save . gofmt-before-save)))
+
+;; rust
+(use-package rust-mode
+  :ensure t
+  :hook (rust-mode . flymake-mode)
+  :config
+  (setq rust-format-on-save t))
+
+(use-package projectile
+  :ensure t
+  :config
+  (projectile-mode +1))
+
+
+(use-package markdown-mode
+  :ensure t
+  :defer t)
 
 (provide 'init-general)
