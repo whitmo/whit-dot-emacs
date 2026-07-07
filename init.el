@@ -11,7 +11,11 @@
 (add-to-list 'package-archives
 	     '("jcs-elpa" . "https://jcs-emacs.github.io/jcs-elpa/packages/") t)
 
-;;(package-initialize)
+;; Make installed packages available even when loading this file explicitly
+;; (for example via emacs -Q -l init.el or batch verification).
+(unless package--initialized
+  (package-initialize))
+
 ;; Bootstrap `use-package'
 ;; -- @@ look at leaf
 (unless (package-installed-p 'use-package)
@@ -33,6 +37,13 @@
   "My configurations.")
 
 (add-to-list 'load-path whit-lisp)
+
+;; Start the Emacs server for emacsclient connections in interactive sessions.
+(use-package server
+  :ensure nil
+  :config
+  (unless (or noninteractive (server-running-p))
+    (server-start)))
 
 ;; Load environment management early
 (use-package init-env
@@ -58,7 +69,6 @@
  ;; If there is more than one, they won't work right.
  '(aider-args
    '("--sonnet " "--cache-prompts" "--cache-keepalive-pings=3") nil nil "Customized with use-package aider")
- '(aider-program "aidr")
  '(case-fold-search t)
  '(current-language-environment "English")
  '(custom-safe-themes
@@ -71,15 +81,14 @@
  '(global-font-lock-mode t nil (font-lock))
  '(grep-command "grep -nri -e ")
  '(grep-find-command
-   "find . -not -path \"*~\" -path \"*.git\" -not -path \"*pyc\" -type f -print0 | xargs -0 grep -in -e ")
+   "find . -not -path \"*~\" -not -path \"*.git\" -not -path \"*pyc\" -type f -print0 | xargs -0 grep -nri -e ")
  '(inhibit-startup-screen t)
  '(js2-basic-offset 4)
  '(list-directory-verbose-switches "-lh")
- '(magit-git-executable "/usr/bin/git" t)
+ '(magit-git-executable "/usr/bin/git")
  '(nil nil t)
  '(package-selected-packages
-   '(mcp-server-lib lua-mode tmux-pane emamux cargo cargo-mode rust-playground claude-code claude-shell flycheck-golangci-lint go-mode magnus flycheck-yamllint yaml-mode aider shell-here shell-switcher ruff-format flymake-ruff editorconfig quelpa gh openai js2-mode json-mode web-mode magit ample-theme leaf use-package))
- '(package-vc-selected-packages '((aider :url "https://github.com/tninja/aider.el")))
+   '(nix-mode wrap-region tss tide codex-cli codex-theme most-used-words aider shell-here shell-switcher ruff-format flymake-ruff editorconfig quelpa-use-package quelpa gh openai js2-mode json-mode web-mode magit ample-theme leaf use-package))
  '(py-start-run-ipython-shell t)
  '(remote-shell-program "/usr/bin/ssh")
  '(rst-level-face-base-light 15)

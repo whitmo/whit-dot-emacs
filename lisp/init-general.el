@@ -68,7 +68,7 @@
 	       ("M-p M-m" . postmortem)
 	       ("M-p M-r" . review))
   :hook ((python-mode . flymake-mode)
-         (python-mode . fly-check-mode))
+         (python-mode . flycheck-mode))
 )
 
 

@@ -2,3 +2,11 @@
 .env
 *~
 *.elc
+/.chatgpt-shell.el
+/.claude-code-mcp.log
+/elpa/
+/request/
+/tramp
+/tree-sitter/
+/projectile-bookmarks.eld
+/bookmarks

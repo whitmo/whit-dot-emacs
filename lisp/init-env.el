@@ -18,8 +18,9 @@ Each entry is a cons of (emacs-var . system-env-var).")
 (use-package exec-path-from-shell
   :ensure t
   :config
-  (exec-path-from-shell-initialize)
-  (exec-path-from-shell-copy-envs (mapcar 'car whit-env-vars)))
+  (unless noninteractive
+    (exec-path-from-shell-initialize)
+    (exec-path-from-shell-copy-envs (mapcar 'car whit-env-vars))))
 
 (defun whit-show-env-vars ()
   "Display current values of managed environment variables."
