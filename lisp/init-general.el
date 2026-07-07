@@ -76,6 +76,7 @@
 
 (load "tramp")
 (setq tramp-default-method "ssh")
+(setq remote-shell-program (or (executable-find "ssh") "/usr/bin/ssh"))
 
 (defun my-shell-mode-hook ()
   "Enable pdb tracking in shell buffers."

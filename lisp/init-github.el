@@ -25,7 +25,7 @@
   :ensure t
   :after transient
   :init
-  (setq magit-git-executable "/usr/bin/git")
+  (setq magit-git-executable (or (executable-find "git") "/usr/bin/git"))
   :bind (("<f6>" . magit-status)  ; Keep existing binding
          ("C-c g s" . magit-status)
          ("C-c g b" . magit-blame)

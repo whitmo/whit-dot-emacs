@@ -10,3 +10,5 @@
 /tree-sitter/
 /projectile-bookmarks.eld
 /bookmarks
+/lisp/init-local.el
+/local.el

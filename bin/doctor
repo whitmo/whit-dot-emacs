@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+set -u -o pipefail
+
+repo_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)
+cd "$repo_root"
+
+status=0
+
+pass() { printf 'PASS: %s\n' "$*"; }
+warn() { printf 'WARN: %s\n' "$*"; }
+fail() { printf 'FAIL: %s\n' "$*"; status=1; }
+info() { printf 'INFO: %s\n' "$*"; }
+
+check_command() {
+  local name=$1
+  local required=${2:-required}
+  if command -v "$name" >/dev/null 2>&1; then
+    pass "$name found at $(command -v "$name")"
+  elif [ "$required" = "required" ]; then
+    fail "$name not found on PATH"
+  else
+    warn "$name not found on PATH ($required)"
+  fi
+}
+
+check_emacs_eval() {
+  local label=$1
+  local expr=$2
+  local output
+  if ! command -v emacs >/dev/null 2>&1; then
+    warn "$label skipped because emacs is unavailable"
+    return
+  fi
+  if output=$(emacs -Q --batch --eval "$expr" 2>&1); then
+    pass "$label: $output"
+  else
+    warn "$label: $output"
+  fi
+}
+
+info "Checking Emacs config at $repo_root"
+
+check_command emacs required
+check_command git required
+check_command ssh required
+check_command base64 required
+
+check_command gh optional
+check_command gofmt optional
+check_command ruff optional
+check_command rustfmt optional
+
+if [ -n "${SHELL:-}" ]; then
+  pass "SHELL is set to $SHELL"
+else
+  warn "SHELL is not set; exec-path-from-shell may not import expected login-shell environment"
+fi
+
+for var in ANTHROPIC_API_KEY OPENAI_API_KEY GOOGLE_GEMINI_API_KEY DEEPSEEK_API_KEY; do
+  if [ -n "${!var:-}" ]; then
+    pass "$var is set"
+  else
+    warn "$var is not set; related AI integrations may need shell environment setup"
+  fi
+done
+
+if command -v emacs >/dev/null 2>&1; then
+  font_status=$(emacs -Q --batch --eval '(princ (if (find-font (font-spec :family "Source Code Pro")) "available" "not found"))' 2>&1)
+  if [ "$font_status" = "available" ]; then
+    pass "Source Code Pro font is available"
+  else
+    warn "Source Code Pro font is not installed; Emacs will use the configured fallback font"
+  fi
+else
+  warn "Source Code Pro font check skipped because emacs is unavailable"
+fi
+
+if [ -f lisp/init-local.el ]; then
+  pass "local override exists at lisp/init-local.el"
+else
+  info "no local override at lisp/init-local.el; this is normal on fresh machines"
+fi
+
+if bin/check; then
+  pass "batch load check passed"
+else
+  fail "batch load check failed"
+fi
+
+exit "$status"
