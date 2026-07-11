@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""CLI for the local Emacs agent bridge."""
+
+from __future__ import annotations
+
+import argparse
+import base64
+import json
+import os
+import subprocess
+import sys
+import tempfile
+import time
+from pathlib import Path
+
+
+DEFAULT_BRIDGE_DIR = Path.home() / ".emacs.d" / "agent-bridge"
+
+
+def elisp_string(value: str) -> str:
+    """Return VALUE as an Emacs Lisp string literal."""
+    return json.dumps(value)
+
+
+def bridge_dir() -> Path:
+    return Path(os.environ.get("EMACS_AGENT_BRIDGE_DIR", DEFAULT_BRIDGE_DIR)).expanduser()
+
+
+def emacsclient_args() -> list[str]:
+    args = [os.environ.get("EMACSCLIENT", "emacsclient")]
+    if socket := os.environ.get("EMACS_AGENT_SOCKET"):
+        args += ["--socket-name", socket]
+    if server_file := os.environ.get("EMACS_AGENT_SERVER_FILE"):
+        args += ["--server-file", server_file]
+    return args
+
+
+def call_emacs(command: str, args: list[object]) -> str:
+    payload = base64.b64encode(json.dumps(args).encode("utf-8")).decode("ascii")
+    with tempfile.NamedTemporaryFile(prefix="emacs-agent-", suffix=".json", delete=False) as tmp:
+        output_path = tmp.name
+    expr = (
+        "(write-region "
+        f"(whit-agent-bridge-cli {elisp_string(command)} {elisp_string(payload)}) "
+        "nil "
+        f"{elisp_string(output_path)} nil 'silent)"
+    )
+    try:
+        result = subprocess.run(
+            emacsclient_args() + ["--eval", expr],
+            check=False,
+            text=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        if result.returncode != 0:
+            raise SystemExit(result.stderr.strip() or result.stdout.strip() or result.returncode)
+        return Path(output_path).read_text(encoding="utf-8")
+    finally:
+        try:
+            os.unlink(output_path)
+        except FileNotFoundError:
+            pass
+
+
+def print_emacs(command: str, args: list[object]) -> int:
+    sys.stdout.write(call_emacs(command, args))
+    sys.stdout.flush()
+    return 0
+
+
+def response_path(request_id: str) -> Path:
+    return bridge_dir() / "responses" / f"{request_id}.json"
+
+
+def cmd_wait(args: argparse.Namespace) -> int:
+    deadline = time.time() + args.timeout
+    path = response_path(args.id)
+    while time.time() <= deadline:
+        if path.exists():
+            sys.stdout.write(path.read_text(encoding="utf-8"))
+            return 0
+        time.sleep(args.interval)
+    print(json.dumps({"ok": False, "error": "timeout", "id": args.id, "path": str(path)}), file=sys.stderr)
+    return 2
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Talk to Emacs through the local agent bridge")
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    sub.add_parser("ping")
+
+    p = sub.add_parser("notify")
+    p.add_argument("message")
+    p.add_argument("--title", default="Agent")
+
+    p = sub.add_parser("open")
+    p.add_argument("file")
+    p.add_argument("line", nargs="?", type=int)
+    p.add_argument("column", nargs="?", type=int)
+
+    sub.add_parser("current")
+    sub.add_parser("selection")
+    sub.add_parser("buffers")
+
+    p = sub.add_parser("inbox")
+    p.add_argument("message")
+    p.add_argument("--from", dest="from_", default="agent")
+
+    p = sub.add_parser("ask")
+    p.add_argument("message")
+    p.add_argument("--from", dest="from_", default="agent")
+
+    p = sub.add_parser("respond")
+    p.add_argument("id")
+    p.add_argument("response")
+    p.add_argument("--from", dest="from_", default="cli")
+
+    p = sub.add_parser("wait")
+    p.add_argument("id")
+    p.add_argument("--timeout", type=float, default=60.0)
+    p.add_argument("--interval", type=float, default=0.25)
+
+    args = parser.parse_args(argv)
+
+    if args.command == "ping":
+        return print_emacs("ping", [])
+    if args.command == "notify":
+        return print_emacs("notify", [args.message, args.title])
+    if args.command == "open":
+        return print_emacs("open", [args.file, args.line, args.column])
+    if args.command in {"current", "selection", "buffers"}:
+        return print_emacs(args.command, [])
+    if args.command == "inbox":
+        return print_emacs("inbox", [args.message, args.from_])
+    if args.command == "ask":
+        return print_emacs("ask", [args.message, args.from_])
+    if args.command == "respond":
+        return print_emacs("respond", [args.id, args.response, args.from_])
+    if args.command == "wait":
+        return cmd_wait(args)
+
+    parser.error(f"unknown command {args.command}")
+    return 64
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

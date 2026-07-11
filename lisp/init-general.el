@@ -1,4 +1,4 @@
-;;; init-dev --- Initialize development environment
+;;; init-dev --- Initialize development environment -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -26,7 +26,15 @@
   :ensure t
   :hook (lua-mode . flymake-mode))
 
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
+
+(use-package server
+  :ensure nil
+  :config
+  ;; Make emacsclient available for editor handoff workflows.  This is not MCP
+  ;; by itself, but it is the right local control plane for an MCP bridge.
+  (unless (or noninteractive (server-running-p))
+    (server-start)))
 
 ;; python
 (use-package flymake-ruff
@@ -41,84 +49,106 @@
       "import pdb;pdb.set_trace()\C-a\C-i")
 
 (fset 'postmortem
-        "import pdb, sys;pdb.post_mortem(sys.exc_info()[2])\C-a\C-i")
+      "import pdb, sys;pdb.post_mortem(sys.exc_info()[2])\C-a\C-i")
 
 (fset 'review
-        "#@@ DWM: ")
-
-;; (defun pdb-track-hook ()
-;;   (add-hook
-;;    'comint-output-filter-functions
-;;    'python-pdbtrack-comint-output-filter-function t))
-
-;; old
-;; (use-package python
-;;   :ensure t
-;;   :bind (([(meta ?p) (meta ?p)] 'break)
-;; 	 ([(meta ?p) (meta ?m)] 'postmortem)
-;; 	 ([(meta ?p) (meta ?r)] 'review))
-;;   :hook ((fly-check-mode . python-mode)
-;; 	 (comint-output-filter-functions . python-pdbtrack-comint-output-filter-function t))
-;; )
+      "#@@ DWM: ")
 
 (use-package python
   :ensure t
-  :bind  (:map python-mode-map
-	       ("M-p M-p" . break)
-	       ("M-p M-m" . postmortem)
-	       ("M-p M-r" . review))
+  :bind (:map python-mode-map
+              ("M-p M-p" . break)
+              ("M-p M-m" . postmortem)
+              ("M-p M-r" . review))
   :hook ((python-mode . flymake-mode)
-         (python-mode . flycheck-mode))
-)
+         (python-mode . flymake-ruff-load)
+         (python-mode . (lambda ()
+                          (add-hook 'comint-output-filter-functions
+                                    #'python-pdbtrack-comint-output-filter-function
+                                    nil 'local)))))
 
+(use-package editorconfig
+  :config
+  (editorconfig-mode 1))
 
-(use-package editorconfig :ensure t)
+(use-package projectile
+  :init
+  (setq projectile-completion-system 'default)
+  :bind-keymap ("C-c P" . projectile-command-map)
+  :config
+  (projectile-mode 1))
+
+(use-package flycheck
+  :defer t
+  :hook (prog-mode . flycheck-mode))
+
+(use-package js2-mode
+  :mode "\\.js\\'"
+  :init
+  (setq js2-basic-offset 4))
+
+(use-package json-mode
+  :mode "\\.json\\'")
+
+(use-package web-mode
+  :mode ("\\.html?\\'"
+         "\\.tsx\\'"
+         "\\.jsx\\'"
+         "\\.vue\\'")
+  :init
+  (setq web-mode-markup-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-code-indent-offset 2))
+
+(use-package markdown-mode
+  :mode ("README\\.md\\'" . gfm-mode)
+  :mode ("\\.md\\'" . markdown-mode)
+  :init
+  (setq markdown-command "multimarkdown"))
+
+(use-package typst-mode
+  :mode "\\.typ\\'")
+
+(use-package rust-mode
+  :mode "\\.rs\\'"
+  :hook (rust-mode . flymake-mode)
+  :init
+  (setq rust-format-on-save t))
+
+(use-package flycheck-rust
+  :after (flycheck rust-mode)
+  :hook (flycheck-mode . flycheck-rust-setup))
+
+(use-package rust-playground
+  :after rust-mode)
+
+(use-package go-mode
+  :hook ((go-mode . flymake-mode)
+         (before-save . gofmt-before-save)))
+
+(use-package vterm
+  :commands vterm
+  :bind ("C-c v" . vterm))
 
 (load "tramp")
-(setq tramp-default-method "ssh")
-(setq remote-shell-program (or (executable-find "ssh") "/usr/bin/ssh"))
+(setq tramp-default-method "ssh"
+      remote-shell-program (or (executable-find "ssh") "/usr/bin/ssh"))
 
 (defun my-shell-mode-hook ()
   "Enable pdb tracking in shell buffers."
   (require 'python)
   (when (fboundp 'python-pdbtrack-comint-output-filter-function)
-    (add-hook
-     'comint-output-filter-functions
-     'python-pdbtrack-comint-output-filter-function t)))
+    (add-hook 'comint-output-filter-functions
+              #'python-pdbtrack-comint-output-filter-function
+              nil 'local)))
 
-(add-hook 'shell-mode-hook 'my-shell-mode-hook)
+(add-hook 'shell-mode-hook #'my-shell-mode-hook)
 
-(use-package "shell-switcher"
+(use-package shell-switcher
   :ensure t)
 
-(use-package "shell-here"
+(use-package shell-here
   :ensure t)
-
-(use-package yaml-mode
-  :ensure t
-  :mode "\\.ya?ml\\'")
-
-;; golang
-(use-package go-mode
-  :ensure t
-  :hook ((go-mode . flymake-mode)
-         (before-save . gofmt-before-save)))
-
-;; rust
-(use-package rust-mode
-  :ensure t
-  :hook (rust-mode . flymake-mode)
-  :config
-  (setq rust-format-on-save t))
-
-(use-package projectile
-  :ensure t
-  :config
-  (projectile-mode +1))
-
-
-(use-package markdown-mode
-  :ensure t
-  :defer t)
 
 (provide 'init-general)
+;;; init-general.el ends here

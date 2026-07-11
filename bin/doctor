@@ -56,7 +56,7 @@ else
   warn "SHELL is not set; exec-path-from-shell may not import expected login-shell environment"
 fi
 
-for var in ANTHROPIC_API_KEY OPENAI_API_KEY GOOGLE_GEMINI_API_KEY DEEPSEEK_API_KEY; do
+for var in ANTHROPIC_API_KEY GOOGLE_GEMINI_API_KEY DEEPSEEK_API_KEY; do
   if [ -n "${!var:-}" ]; then
     pass "$var is set"
   else

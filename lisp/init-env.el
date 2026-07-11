@@ -9,18 +9,19 @@
 
 (defvar whit-env-vars
   '(("ANTHROPIC_API_KEY" . "ANTHROPIC_API_KEY")
-    ("OPENAI_API_KEY" . "OPENAI_API_KEY")
     ("GOOGLE_GEMINI_API_KEY" . "GOOGLE_GEMINI_API_KEY")
     ("DEEPSEEK_API_KEY" . "DEEPSEEK_API_KEY"))
   "A list of environment variables to preserve/set in Emacs.
 Each entry is a cons of (emacs-var . system-env-var).")
 
 (use-package exec-path-from-shell
-  :ensure t
   :config
+  (setq exec-path-from-shell-variables
+        (delete-dups (append exec-path-from-shell-variables
+                             (mapcar #'car whit-env-vars))))
   (unless noninteractive
     (exec-path-from-shell-initialize)
-    (exec-path-from-shell-copy-envs (mapcar 'car whit-env-vars))))
+    (exec-path-from-shell-copy-envs (mapcar #'car whit-env-vars))))
 
 (defun whit-show-env-vars ()
   "Display current values of managed environment variables."

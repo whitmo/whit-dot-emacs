@@ -4,6 +4,8 @@
   :ensure t)
 
 (use-package norns
+  ;; Not in the package archive set; keep this as an optional/manual package.
+  :ensure nil
   :hook (lua-mode-hook . norns-mode-maybe-activate)
   :bind (
          :map norns-mode-map
