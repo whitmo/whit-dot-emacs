@@ -28,13 +28,13 @@ feature-specific files under `lisp/`.
 
 **Modules:**
 - `init-env` — Imports shell environment variables (API keys for
-  Anthropic, OpenAI, Gemini, Deepseek) via `exec-path-from-shell`
+  Anthropic, Gemini, Deepseek) via `exec-path-from-shell`
 - `init-whit` — Personal constants (name, email)
 - `init-customvar` — Custom variable definitions
 - `init-general` — Development tools: Python (ruff, flymake,
   pdbtrack), Lua, editorconfig, shell-switcher, keybindings
 - `init-ai` — Google Gemini integration
-- `init-github` — Magit, GitHub CLI (`gh`), Codespaces, Copilot
+- `init-github` — Magit, GitHub CLI (`gh`), Codespaces
 - `init-music` — Norns/SuperCollider/Lua music tooling
 
 ## Key Keybindings
@@ -50,6 +50,6 @@ feature-specific files under `lisp/`.
 - No test suite or Makefile; validate by loading in Emacs
 - Git commits use conventional commit prefixes (feat:, fix:,
   refactor:)
-- `.gitignore` excludes: `.aider*`, `.env`, `*~`, `*.elc`
+- `.gitignore` excludes: `.env`, `*~`, `*.elc`
 - Packages installed via `use-package :ensure t` or
   `package-vc-install` for VCS sources

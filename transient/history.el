@@ -1,19 +1,14 @@
-((aider-transient-menu nil)
- (claude-code-transient nil)
- (copilot-chat-transient nil)
- (magit-branch nil)
- (magit-commit
-  ("--verbose")
-  nil)
+((magit-branch nil)
+ (magit-commit nil)
  (magit-diff
   ("--stat" "--no-ext-diff")
   ("--no-ext-diff" "--stat"))
  (magit-dispatch nil)
- (magit-fetch nil
-	      ("--prune"))
+ (magit-fetch
+  ("--prune")
+  nil)
  (magit-gitignore nil)
  (magit-log
-  ("--decorate" "--graph" "-n256")
   ("-n256" "--graph" "--decorate")
   ("-n256" "--graph" "--color" "--decorate")
   ("-n256" "--color" "--decorate")
@@ -25,11 +20,12 @@
 	     ("--ff-only"))
  (magit-push nil
 	     ("--force-with-lease"))
- (magit-rebase nil)
+ (magit-rebase nil
+               ("--autosquash" "--autostash")
+               ("--autostash"))
  (magit-run nil)
  (magit-stash nil
 	      ("--include-untracked"))
- (magit-submodule nil)
  (magit-tag nil)
  (magit-worktree nil)
  (pi-coding-agent-menu nil)
