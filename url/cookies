@@ -1,0 +1,19 @@
+;; Emacs-W3 HTTP cookies file
+;; Automatically generated file!!! DO NOT EDIT!!!
+
+(setq url-cookie-storage
+ 'nil)
+(setq url-cookie-secure-storage
+ '((".slack.com"
+  [url-cookie "utm" "%7B%7D" "Sun Nov 22 17:15:28 2026 GMT" "/" ".slack.com" t]
+  [url-cookie "b" "b6bcb3e1fb75da07af2de7d3cf36d86c" "Sat Nov 08 17:15:26 2036 GMT" "/" ".slack.com" t]
+  [url-cookie "x" "b6bcb3e1fb75da07af2de7d3cf36d86c.1794158126" "Sun Nov 08 17:30:28 2026 GMT" "/" ".slack.com" t]))
+)
+
+;; Local Variables:
+;; version-control: never
+;; no-byte-compile: t
+;; coding: utf-8-emacs-unix
+;; End:
+
+;;; cookies ends here

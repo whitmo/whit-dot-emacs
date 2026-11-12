@@ -110,6 +110,9 @@
 (use-package init-github
   :ensure nil
   :demand t)
+(use-package init-pi
+  :ensure nil
+  :demand t)
 
 (whit-package-vc-install-if-missing
  'claude-code
@@ -142,9 +145,14 @@
  '(inhibit-startup-screen t)
  '(js2-basic-offset 4)
  '(list-directory-verbose-switches "-lh")
+ '(magit-git-executable "/usr/bin/git")
+ '(nil nil t)
  '(package-selected-packages
-   '(nix-mode wrap-region tss tide codex-cli codex-theme most-used-words aider shell-here shell-switcher ruff-format flymake-ruff editorconfig quelpa-use-package quelpa gh openai js2-mode json-mode web-mode magit ample-theme leaf use-package))
+   '(flymake-yamllint flycheck-yamllint yaml yaml-imenu yaml-mode envrc dockerfile-mode pg pi-coding-agent claude-code claude-code-emacs codespaces aider shell-here shell-switcher ruff-format flymake-ruff editorconfig quelpa-use-package quelpa gh openai js2-mode json-mode web-mode magit ample-theme leaf use-package))
+ '(package-vc-selected-packages
+   '((claude-code-emacs :vc-backend Git :url "https://github.com/yuya373/claude-code-emacs")))
  '(py-start-run-ipython-shell t)
+ '(remote-shell-program "/usr/bin/ssh")
  '(rst-level-face-base-light 15)
  '(safe-local-variable-values '((encoding . utf-8)))
  '(shell-input-autoexpand 'input)
@@ -160,7 +168,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit nil :stipple nil :background "gray21" :foreground "pale goldenrod" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "nil"))))
+ '(default ((t (:inherit nil :stipple nil :background "gray21" :foreground "pale goldenrod" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "nil" :family "Source Code Pro"))))
  '(flymake-errline ((((class color)) (:background "DarkRed"))) t))
 
 (let ((font-family (whit-available-font-family '("Source Code Pro" "Menlo" "Monaco"))))

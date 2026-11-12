@@ -6,6 +6,7 @@
   ("--verbose")
   nil)
  (magit-diff
+  ("--stat" "--no-ext-diff")
   ("--no-ext-diff" "--stat"))
  (magit-dispatch nil)
  (magit-fetch nil
@@ -25,9 +26,11 @@
  (magit-push nil
 	     ("--force-with-lease"))
  (magit-rebase nil)
+ (magit-run nil)
  (magit-stash nil
 	      ("--include-untracked"))
  (magit-submodule nil)
  (magit-tag nil)
  (magit-worktree nil)
- (pi-coding-agent-menu nil))
+ (pi-coding-agent-menu nil)
+ (pilish-menu nil))
